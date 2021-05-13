@@ -13,7 +13,7 @@ exports.createUser = (req, res, next ) => {
         edad: req.body.edad,
         sexo: req.body.sexo,
         email: req.body.email,
-        password : req.body.password,
+        password : bcrypt.hashSync(req.body.password),
         tipo: req.body.tipo
         
     }
@@ -66,8 +66,8 @@ exports.loginUser = (req,res, next) => {
             // email doesn't exist
             res.status(409).send({message: 'Usuario o contraseña incorrecta'});
         }  else{
-            const resultPassword = userData.password;
-            if(resultPassword === user.password){
+            const resultPassword = bcrypt.compareSync(userData.password, user.password);
+            if(resultPassword){
                 const expiresIn = 24*60*60;
                 const accessToken = jwt.sign({ id: user.id }, SECRET_KEY, {expiresIn: expiresIn});
                 const dataUser = { 
@@ -84,3 +84,4 @@ exports.loginUser = (req,res, next) => {
         }
     });
 }
+
