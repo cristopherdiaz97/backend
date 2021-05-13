@@ -12,7 +12,7 @@ const perfilSchema = new Schema ({
         require: false
     },
     publicacion:{
-        type: ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: "Publicacion",
         require: false
     }

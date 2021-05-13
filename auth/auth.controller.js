@@ -2,30 +2,31 @@ const User = require ('./auth.dao');
 const jwt = require ('jsonwebtoken');
 const bcrypt = require ('bcryptjs');
 const { response } = require('express');
-
 const SECRET_KEY = 'secretkey1234567';
 
 exports.createUser = (req, res, next ) => {
     
-    console.log(req);
+    
     const newUser = {
-        nombre : req.body.name,
+        nombre : req.body.nombre,
         apellido : req.body.apellido,
         edad: req.body.edad,
         sexo: req.body.sexo,
         email: req.body.email,
-        password : req.body.password
+        password : req.body.password,
+        tipo: req.body.tipo
         
     }
     
     
     User.create (newUser, (err, user) => {
-        console.log(req);
+        
         if(err && err.code === 11000){
             return res.status(409).send('El correo ya existe');
         } 
         
         if(err) return res.status(500).send('Server error 500');
+
         const expiresIn = 24 * 60 * 60;
         const accessToken = jwt.sign(
             { 
@@ -42,8 +43,9 @@ exports.createUser = (req, res, next ) => {
             sexo: user.sexo,
             email: user.email,
             password: user.password,
+            tipo: user.tipo,
             accessToken: accessToken,
-            expiresIn: expiresIn,
+            expiresIn: expiresIn
             
         }
             //response

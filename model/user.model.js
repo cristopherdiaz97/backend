@@ -43,24 +43,31 @@ const userSchema = new Schema ({
         required: false
     },
     tipo: {
-        type: mongoose.Types.ObjectId,
-        ref: "TipoUsuario",
-        required: false
+        type: Number,
+        required: true
     },
     membresia: {
-        type: mongoose.Types.ObjectId,
-        ref: "Membresia",
-        required: false
+        type: Boolean,
+        required: true,
+        default: false
     },
-    perfil: {
+    comentario: {
         type: mongoose.Types.ObjectId,
-        ref: "Perfil",
+        ref: "Comentarios",
         required: false   
     },
     reservas:{
         type: mongoose.Types.ObjectId,
         ref: "Reservas",
         required: false
+    },
+    publicaciones: {
+        type: mongoose.Types.ObjectId,
+        required: false
+    },
+    likes: {
+        type: Number,
+        default: 0
     }
 
 

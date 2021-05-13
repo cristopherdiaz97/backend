@@ -1,6 +1,6 @@
 const mongoose = require ('mongoose');
 const authSchema = require ('../model/user.model');
-const authSchemaPerfil = require ();
+
 authSchema.statics = {
     create: function (data, cb){
         const user = new this(data);
