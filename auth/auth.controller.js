@@ -64,13 +64,14 @@ exports.loginUser = (req,res, next) => {
         if(err) return req.status(500).send('Server error!');
         if(!user) {
             // email doesn't exist
-            res.status(409).send({message: 'Something is wrong'});
+            res.status(409).send({message: 'Usuario o contraseña incorrecta'});
         }  else{
             const resultPassword = userData.password;
-            if(resultPassword){
+            if(resultPassword === user.password){
                 const expiresIn = 24*60*60;
                 const accessToken = jwt.sign({ id: user.id }, SECRET_KEY, {expiresIn: expiresIn});
-                const dataUser = { name : user.name,
+                const dataUser = { 
+                    name : user.name,
                     email : user.email,
                     accessToken : accessToken,
                     expiresIn : expiresIn
@@ -78,7 +79,7 @@ exports.loginUser = (req,res, next) => {
                 res.send({dataUser});
             } else{
                 // password wrong
-              res.status(409).send({message: 'Something is wrong'});
+              res.status(409).send({message: 'Usuario o contraseña incorrecta'});
             }
         }
     });
