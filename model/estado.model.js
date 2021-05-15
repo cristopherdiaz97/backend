@@ -5,11 +5,12 @@ const estadoSchema = new Schema({
     nombre:{
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     }
 },
 {
     timestamps : true
 });
 
-module.exports = estadoSchema;
+module.exports = mongoose.model('Estado', estadoSchema);

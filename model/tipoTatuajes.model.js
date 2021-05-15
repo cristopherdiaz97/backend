@@ -2,14 +2,15 @@ const mongoose = require ('mongoose');
 const Schema = mongoose.Schema;
 
 const tatuajeSchema = new Schema({
-    estilo:{
+    nombre:{
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     }
 },
 {
     timestamps : true
 });
 
-module.exports = tatuajeSchema;
+module.exports = mongoose.model('estilosTatuajes', tatuajeSchema);

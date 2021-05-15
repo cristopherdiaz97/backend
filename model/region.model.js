@@ -2,11 +2,13 @@ const mongoose = require ('mongoose');
 const Schema = mongoose.Schema;
 
 const regionSchema = new Schema({
-    region:{
+    nombre:{
         type: String,
         required: true,
-        trim: true
-    }
+        trim: true,
+        unique: true
+    },
+    comuna: [String]
 },
 {
     timestamps : true

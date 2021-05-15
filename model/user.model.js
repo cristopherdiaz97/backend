@@ -1,6 +1,6 @@
 const mongoose = require ('mongoose');
 const Schema = mongoose.Schema;
-
+const {ObjectId} = mongoose.Schema;
 const userSchema = new Schema ({
     nombre: {
         type:String,
@@ -14,9 +14,11 @@ const userSchema = new Schema ({
         
     },
     edad: {
-        type: String,
+        type: Number,
         required: true,
-        trim: true
+        trim: true,
+        min: 0,
+        max: 100
     },
     sexo: {
         type:String,
@@ -26,7 +28,8 @@ const userSchema = new Schema ({
     email: {
         type:String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     },
     password: {
         type: String,
@@ -34,11 +37,12 @@ const userSchema = new Schema ({
         trim: true
     },
     img: {
-        type:String,
+        data: Buffer,
+        contentType: String,
         required: false
     },
     direccion: {
-        type: mongoose.Types.ObjectId,
+        type: ObjectId,
         ref: "Direccion",
         required: false
     },
@@ -52,17 +56,18 @@ const userSchema = new Schema ({
         default: false
     },
     comentario: {
-        type: mongoose.Types.ObjectId,
+        type: ObjectId,
         ref: "Comentarios",
         required: false   
     },
     reservas:{
-        type: mongoose.Types.ObjectId,
+        type: ObjectId,
         ref: "Reservas",
         required: false
     },
     publicaciones: {
-        type: mongoose.Types.ObjectId,
+        type: ObjectId,
+        ref: "Publicaciones",
         required: false
     },
     likes: {
@@ -77,4 +82,4 @@ const userSchema = new Schema ({
 });
 
 
-module.exports = userSchema;
+module.exports = mongoose.model('Users', userSchema);
