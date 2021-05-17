@@ -18,6 +18,7 @@ const regionRoutes = require('./rutas/region');
 const estadoRoutes = require('./rutas/estado');
 const tiposTatuajesRoutes = require('./rutas/tipoTatuajes');
 
+
 //Iniciar base de datos
 DB();
 
@@ -35,6 +36,7 @@ app.use('/api', authRoutes);
 app.use('/api', regionRoutes);
 app.use('/api', estadoRoutes);
 app.use('/api', tiposTatuajesRoutes);
+
 
 // app.use(router);
 app.listen(properties.PORT, () => console.log(`Server running on port ${properties.PORT}`));

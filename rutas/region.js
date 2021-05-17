@@ -1,13 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const {create} = require ('../controllers/region');
+
+const {create, regionPorId, buscar, eliminar, modificar, listaRegiones} = require ('../controllers/region');
 const {buscarPorId} = require ('../controllers/user');
 const { requiereLogeo, isAuth, isAdmin } = require ('../controllers/auth');
 
-//RUTAS REGIONES
+
+router.get('/region/buscar/:regionId/:userId', requiereLogeo, isAuth, isAdmin, buscar);
+router.delete('/region/eliminar/:regionId/:userId', requiereLogeo, isAuth, isAdmin, eliminar);
+router.put('/region/modificar/:regionId/:userId', requiereLogeo, isAuth, isAdmin, modificar);
 router.post('/region/crear/:userId', requiereLogeo, isAuth, isAdmin, create);
+router.get('/region/listado/:userId', requiereLogeo, listaRegiones);
+
 
 router.param('userId', buscarPorId);
+router.param('regionId', regionPorId);
 
 module.exports = router;    
 

@@ -6,6 +6,7 @@ const userSchema = new Schema ({
         type:String,
         required: true,
         trim: true
+        
     },
     apellido: {
         type:String,
@@ -17,7 +18,7 @@ const userSchema = new Schema ({
         type: Number,
         required: true,
         trim: true,
-        min: 0,
+        min: 18,
         max: 100
     },
     sexo: {
@@ -34,7 +35,8 @@ const userSchema = new Schema ({
     password: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        
     },
     img: {
         data: Buffer,

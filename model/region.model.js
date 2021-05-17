@@ -8,7 +8,11 @@ const regionSchema = new Schema({
         trim: true,
         unique: true
     },
-    comuna: [String]
+    comuna: {
+        type: Array,
+        required: true,
+        trim: true
+    }
 },
 {
     timestamps : true
