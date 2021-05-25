@@ -1,62 +1,28 @@
 const mongoose = require ('mongoose');
 const Schema = mongoose.Schema;
 const {ObjectId} = mongoose.Schema;
-const userSchema = new Schema ({
+
+const publicacionSchema = new Schema ({
     nombre: {
         type:String,
         required: true,
         trim: true
         
     },
-    apellido: {
+    descripcion: {
         type:String,
         required: true,
         trim: true,
         
     },
-    edad: {
+    likes: {
         type: Number,
-        required: true,
-        trim: true,
-        min: 18,
-        max: 100
-    },
-    sexo: {
-        type:String,
-        required: false,
-        trim: true
-    },
-    email: {
-        type:String,
-        required: true,
-        trim: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true,
-        trim: true,
-        
+        default: 0
     },
     img: {
         data: Buffer,
         contentType: String,
-        required: false
-    },
-    region: {
-        type: ObjectId,
-        ref: "Region",
-        trim: true,
-        required: false
-    },
-    tipo: {
-        type: Number,
-        required: true
-    },
-    membresia: {
-        type: Boolean,
-        required: true,
-        default: false
+        
     },
     comentarios: [{
         comentario: {
@@ -78,19 +44,25 @@ const userSchema = new Schema ({
             }
         }]  
     }],
-    reserva:{
+    creador:{
         type: ObjectId,
-        ref: "Reservas",
+        ref: "Users",
+        required: true
+    },
+    estiloTatuaje: {
+        type: ObjectId,
+        ref: "estilosTatuajes",
         required: false
     },
-    publicaciones: [{
+    tatuado:{
         type: ObjectId,
-        ref: "Publicaciones",
+        ref: "Users",
         required: false
-    }],
+    },
     likes: {
         type: Number,
-        default: 0
+        default: 0,
+        
     }
 
 
@@ -100,4 +72,4 @@ const userSchema = new Schema ({
 });
 
 
-module.exports = mongoose.model('Users', userSchema);
+module.exports = mongoose.model('Publicaciones', publicacionSchema);

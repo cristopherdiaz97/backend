@@ -10,7 +10,7 @@ router.get('/region/buscar/:regionId/:userId', requiereLogeo, isAuth, isAdmin, b
 router.delete('/region/eliminar/:regionId/:userId', requiereLogeo, isAuth, isAdmin, eliminar);
 router.put('/region/modificar/:regionId/:userId', requiereLogeo, isAuth, isAdmin, modificar);
 router.post('/region/crear/:userId', requiereLogeo, isAuth, isAdmin, create);
-router.get('/region/listado/:userId', requiereLogeo, listaRegiones);
+router.get('/region/listado/:userId', listaRegiones);
 
 
 router.param('userId', buscarPorId);

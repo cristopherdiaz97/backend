@@ -146,7 +146,8 @@ exports.requiereLogeo = (req, res, next) => {
 
 // ISAUTH EVALUA SI EL USUARIO ESTA AUTORIZADO A ENTRAR, EJ. USUARIO/MODIFICARPERFIL TIENE QUE SER UN USUARIO O UN ADMIN 
 exports.isAuth = (req, res, next) =>{
-     
+    // console.log(req.publicacion.creador);
+    // let user = req.profile && req.profile._id && req.publicacion.creador == req.user 
     let user = req.profile && req.profile._id == req.user 
      if(!user){
          return res.status(403).json({

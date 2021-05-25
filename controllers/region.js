@@ -59,7 +59,6 @@ exports.modificar = (req, res) => {
     
     const region = req.region;
     region.nombre = req.body.nombre;
-    region.comuna = req.body.comuna;
 
     region.save((error,data) =>{
 

@@ -6,7 +6,9 @@ const bcrypt = require ('bcryptjs');
 
 exports.buscarPorId = (req, res, next, id) =>{
     
-    User.findById(id).exec((err, user) => {
+    User.findById(id)
+    .populate('region', 'nombre')
+    .exec((err, user) => {
 
         if(err || !user) {
             return res.status(400).json({
@@ -14,7 +16,8 @@ exports.buscarPorId = (req, res, next, id) =>{
             })
         }
         req.profile = user;
-        next();  
+        
+        next();
     })
     
 };
@@ -76,3 +79,4 @@ exports.modificarUser = (req, res) => {
     });
     
 }
+
