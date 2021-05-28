@@ -8,6 +8,7 @@ exports.buscarPorId = (req, res, next, id) =>{
     
     User.findById(id)
     .populate('region', 'nombre')
+    .populate('comentarios', 'usuario')
     .exec((err, user) => {
 
         if(err || !user) {
@@ -21,6 +22,81 @@ exports.buscarPorId = (req, res, next, id) =>{
     })
     
 };
+
+exports.buscarUserComentario = (req, res, next, id) =>{
+    
+    User.findById(id)
+    .populate('region', 'nombre')
+    .exec((err, user) => {
+
+        if(err || !user) {
+            return res.status(400).json({
+                error: 'Usuario no encontrado o no esta logeado!'
+            })
+        }
+        req.profile2 = user;
+        
+        next();
+    })
+    
+};
+
+exports.hacerComentario = (req, res) => {
+    const usuario = req.profile
+    const usuario2 = req.profile2
+    
+    User.updateOne({ _id: usuario._id}, 
+    {
+        $push: { 
+        comentarios: {comentario: req.body.comentario, usuario: usuario2._id}
+    }
+    }
+    ).populate('comentarios._id')
+    .exec( (err, result) => {
+        if(err){
+            return res.status(400).json({error : err})
+        }else{
+            res.json({
+                text: 'Comentario agregado!',
+                perfilUsuario : usuario.nombre
+            })
+        }
+    })  
+    
+}
+
+exports.respuestaComentario = (req, res) => {
+    const usuario = req.profile
+    const usuarioComenta = req.profile2
+    if(!req.body.respuesta){
+        return res.json({
+            texto: 'No puedes enviar comentarios sin texto!'
+        })
+    }
+    User.updateOne(
+        { '_id': usuario._id, 'comentarios._id': req.body.id },
+        {
+            $push: { 
+                'comentarios.$.respuesta': 
+                {
+                    respuesta: req.body.respuesta, 
+                    usuario: usuarioComenta._id
+                }
+        }
+        })
+        .populate('comentarios._id')
+        .exec( (err) => {
+            if(err){
+                return res.status(400).json({error : err})
+            }else{
+                res.json({
+                    text: 'Comentario agregado!'
+                    
+                })
+            }
+        }) 
+    
+}
 
 exports.modificarUser = (req, res) => {
     let form = new formidable.IncomingForm();

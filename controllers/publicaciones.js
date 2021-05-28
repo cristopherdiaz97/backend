@@ -22,8 +22,8 @@ exports.create = (req, res, next ) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        const {nombre, descripcion} = fields
-        if(!nombre || !descripcion){
+        const {nombre, descripcion, estiloTatuaje, tatuado} = fields
+        if(!nombre || !descripcion || !estiloTatuaje || !tatuado){
             return res.status(400).json({
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
@@ -147,6 +147,11 @@ exports.modificar = (req, res) => {
 
 exports.respuestaComentario = (req, res) => {
     const publicacion = req.publicacion
+    if(!req.body.respuesta){
+        return res.json({
+            mensaje: 'Comentario no debe ir vacío!'
+        })
+    }
     Publicaciones.updateOne(
         { '_id': publicacion._id, 'comentarios._id': req.body.id },
         {
@@ -173,6 +178,11 @@ exports.respuestaComentario = (req, res) => {
 }
 
 exports.hacerComentario = (req, res) => {
+    if(!req.body.comentario){
+        return res.json({
+            mensaje: 'Comentario no debe ir vacío!'
+        })
+    }
     const publicacion = req.publicacion
     
     Publicaciones.updateOne({ _id: publicacion._id}, 
