@@ -1,8 +1,7 @@
 const mongoose = require ('mongoose');
 const dbUrl = require ('./properties').DB;
-
 module.exports = () => {
-    mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+    mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true } )
     .then(() => console.log(`Mongo connected on ${dbUrl}`))
     .catch(err => console.log(`Connection has error ${err}` ))
 

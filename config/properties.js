@@ -1,4 +1,4 @@
 module.exports = {
     PORT: process.env.PORT || 3000,
-    DB: 'mongodb://localhost:27017/InkappDB'
+    DB: "mongodb+srv://admin:admin123@inkapp.nfyae.mongodb.net/inkapp?retryWrites=true&w=majority"
 }
