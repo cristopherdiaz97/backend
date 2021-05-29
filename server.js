@@ -39,5 +39,8 @@ app.use('/api', estadoRoutes);
 app.use('/api', tiposTatuajesRoutes);
 app.use('/api', publicacionesRoutes);
 app.use('/api', proyectoRoutes);
+app.use('/',  (err, res) => {
+    res.json('Bienvenido a Inkapp!!');
+})
 // app.use(router);
 app.listen(properties.PORT, () => console.log(`Server running on port ${properties.PORT}`));
