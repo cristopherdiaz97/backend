@@ -79,7 +79,8 @@ exports.listaProyectos = (req, res) => {
     Proyecto.find()
     .populate('estado', 'nombre')
     .populate('creador', 'nombre')
-    .populate('estiloTatuaje', 'nombre')
+    .populate('estiloTatuaje')
+    .populate({path:'oferta', model: 'Oferta'})
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({

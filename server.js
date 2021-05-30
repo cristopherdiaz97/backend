@@ -17,8 +17,9 @@ const authRoutes = require('./rutas/auth');
 const regionRoutes = require('./rutas/region');
 const estadoRoutes = require('./rutas/estado');
 const tiposTatuajesRoutes = require('./rutas/tipoTatuajes');
-const publicacionesRoutes = require ('./rutas/publicaciones')
-const proyectoRoutes = require ('./rutas/proyecto')
+const publicacionesRoutes = require ('./rutas/publicaciones');
+const proyectoRoutes = require ('./rutas/proyecto');
+const ofertaRoutes = require ('./rutas/ofertas');
 
 //Iniciar base de datos
 DB();
@@ -39,8 +40,10 @@ app.use('/api', estadoRoutes);
 app.use('/api', tiposTatuajesRoutes);
 app.use('/api', publicacionesRoutes);
 app.use('/api', proyectoRoutes);
-app.use('/',  (err, res) => {
-    res.json('Bienvenido a Inkapp!!');
-})
-// app.use(router);
+app.use('/api', ofertaRoutes);
+
+// app.use('/',  (err, res) => {
+//     res.json('Bienvenido a Inkapp!!');
+// })
+
 app.listen(properties.PORT, () => console.log(`Server running on port ${properties.PORT}`));

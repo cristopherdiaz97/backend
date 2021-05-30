@@ -18,9 +18,8 @@ exports.create = (req, res, next) => {
                 error : errorHandler(err)
             })
         }
-        res.json({ data })
-
-  });
+            res.json({ data })
+        });
 
 };
 

@@ -101,8 +101,10 @@ exports.loginUser = (req,res, next) => {
                     id: user._id,
                     tipo: user.tipo,
                     nombre : user.nombre,
-                    email : user.email
-                    
+                    email : user.email,
+                    membresia: membresia,
+                    likes: likes,
+                    img: img
                 };
                 return res.json ({accessToken, dataUser })
                 

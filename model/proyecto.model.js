@@ -34,11 +34,13 @@ const proyectoSchema = new Schema ({
         ref: "estilosTatuajes",
         required: false
     },
-    oferta: [{
-        type: ObjectId,
-        ref: "Oferta",
-        required: false
-    }],
+    oferta: [
+            {
+                type: ObjectId,
+                ref: "Oferta",
+                required: false
+            }       
+    ],
     estado: {
         type: ObjectId,
         ref: "Estado",
