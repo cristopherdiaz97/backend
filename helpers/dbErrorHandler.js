@@ -18,7 +18,7 @@
             output = "Campo unico ya registrado!";
         }
 
-        return output;
+        return output; 
     };
 
     /*
@@ -42,6 +42,5 @@
                     message = error.errorors[errorName].message;
             }
         }
-
         return message;
     };

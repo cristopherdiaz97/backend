@@ -23,6 +23,7 @@ exports.create = (req, res, next) => {
 
 };
 
+//METODO MIDDLEWARE (RUTAS)
 exports.estadoPorId = (req, res, next, id) => {
     Estado.findById(id).exec((err, estado) => {
         if(err || !estado) {

@@ -8,6 +8,11 @@ exports.create = (req, res, next ) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
      
+    if(req.profile.membresia == false) {
+        return res.json({
+            mensaje: 'Lo sentimos, debes adquirir una membresía para utilizar esta opción'
+        })
+    }
     form.parse(req, (err, fields, files) => {
 
         
@@ -60,7 +65,14 @@ exports.create = (req, res, next ) => {
 }
 
 exports.proyectoPorId = (req, res, next, id) => {
-    Proyecto.findById(id).exec((err, proyecto) => {
+    Proyecto.findById(id)
+    .populate('estado', 'nombre')
+    .populate('creador', 'nombre')
+    .populate('estiloTatuaje', 'nombre')
+    .populate({path:'oferta', model: 'Oferta'})
+    .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
+    .populate({path: 'oferta', populate: { path: 'ofertante', select: 'nombre'}})
+    .exec((err, proyecto) => {
         if(err || !proyecto) {
             return res.status(400).json({
                 error: 'proyecto no encontrado'
@@ -79,8 +91,10 @@ exports.listaProyectos = (req, res) => {
     Proyecto.find()
     .populate('estado', 'nombre')
     .populate('creador', 'nombre')
-    .populate('estiloTatuaje')
+    .populate('estiloTatuaje', 'nombre')
     .populate({path:'oferta', model: 'Oferta'})
+    .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
+    .populate({path: 'oferta', populate: { path: 'ofertante', select: 'nombre'}})
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({
