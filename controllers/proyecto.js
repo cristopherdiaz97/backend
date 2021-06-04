@@ -71,7 +71,7 @@ exports.proyectoPorId = (req, res, next, id) => {
     .populate('estiloTatuaje', 'nombre')
     .populate({path:'oferta', model: 'Oferta'})
     .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
-    .populate({path: 'oferta', populate: { path: 'ofertante', select: 'nombre'}})
+    .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
     .exec((err, proyecto) => {
         if(err || !proyecto) {
             return res.status(400).json({
@@ -94,7 +94,7 @@ exports.listaProyectos = (req, res) => {
     .populate('estiloTatuaje', 'nombre')
     .populate({path:'oferta', model: 'Oferta'})
     .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
-    .populate({path: 'oferta', populate: { path: 'ofertante', select: 'nombre'}})
+    .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({
@@ -123,21 +123,20 @@ exports.modificar = (req, res) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        const {nombre, tamaño, parteCuerpo, estiloTatuaje, estado} = fields
-        if(!nombre || !tamaño || !parteCuerpo || !estiloTatuaje || !estado){
+        const {nombre, tamaño, parteCuerpo, estiloTatuaje} = fields
+        if(!nombre || !tamaño || !parteCuerpo || !estiloTatuaje){
             return res.status(400).json({
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
         }
 
-        if(files.img){
+        if(files.img.type != null){
             //Tamaño mayor a 1mb 
             if(files.img.size > 1000000){
                 return res.status(400).json({
                     error: 'La imagen no puede superar 1mb en tamaño'
                 })
             }
-
             proyecto.img.data = fs.readFileSync(files.img.path);
             proyecto.img.contentType = files.img.type;
         }
@@ -174,3 +173,26 @@ exports.eliminar = (req, res) => {
     }
     );
 }
+
+exports.listaProyectosUsuarios = (req, res) => {
+    const user = req.profile
+
+    Proyecto.find({creador: user._id})
+    .populate('estado', 'nombre')
+    .populate('creador', 'nombre')
+    .populate('estiloTatuaje', 'nombre')
+    .populate({path:'oferta', model: 'Oferta'})
+    .populate({path: 'oferta', populate: { path: 'estado'}})
+    .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
+    .exec((err, data) => {
+        if(err) {
+            return res.status(400).json({
+                error: err
+              }); 
+        }
+        if(data.length === 0){
+            res.json({mensaje: 'Aún no tienes proyectos'})
+        }else{
+        res.json({data})}
+    })
+};

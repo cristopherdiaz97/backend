@@ -9,7 +9,7 @@ router.post('/tiposTatuajes/crear/:userId', requiereLogeo, isAuth, isAdmin, crea
 router.put('/tipoTatuajes/modificar/:tipoTatuajeId/:userId', requiereLogeo, isAuth, isAdmin, modificar);
 router.get('/tipoTatuajes/buscar/:tipoTatuajeId/:userId', requiereLogeo, isAuth, isAdmin, buscar);
 router.delete('/tipoTatuajes/eliminar/:tipoTatuajeId/:userId', requiereLogeo, isAuth, isAdmin, eliminar);
-router.get('/tipoTatuajes/listado/:userId', requiereLogeo, listaTipoTatuajes)
+router.get('/tipoTatuajes/listado/:userId', requiereLogeo, isAuth, listaTipoTatuajes)
 
 router.param('userId', buscarPorId);
 router.param('tipoTatuajeId', tipoTatuajePorId);

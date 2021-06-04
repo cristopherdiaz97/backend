@@ -10,7 +10,7 @@ router.post('/estado/crear/:userId', requiereLogeo, isAuth, isAdmin, create);
 router.put('/estado/modificar/:estadoId/:userId', requiereLogeo, isAuth, isAdmin, modificar);
 router.get('/estado/buscar/:estadoId/:userId', requiereLogeo, isAuth, isAdmin, buscar);
 router.delete('/estado/eliminar/:estadoId/:userId', requiereLogeo, isAuth, isAdmin, eliminar);
-router.get('/estado/listado/:userId', requiereLogeo, listaEstados)
+router.get('/estado/listado/:userId', requiereLogeo, isAuth, listaEstados)
 router.param('userId', buscarPorId);
 router.param('estadoId', estadoPorId);
 

@@ -80,9 +80,35 @@ exports.ofertaPorId = (req, res, next, id) => {
         next();
     })
 };
-// exports.buscar = (req, res) => {
-//     return res.json(req.estado);
-// }
+
+exports.buscar = (req, res) => {
+    
+    const proyecto = req.proyecto
+    const oferta = req.oferta
+    const usuario = req.profile
+
+    // Buscar la publicación el proyecto solo si es el creador.
+    if(usuario._id.equals(proyecto.creador._id)){
+
+        Oferta.findById(oferta._id)
+        .populate({path: 'ofertante', model: 'Users', select: 'userName'})
+        .populate({path: 'estado', model: 'Estado', select: 'nombre'})
+        .exec((err, oferta) => {
+            if(err || !oferta) {
+                return res.status(400).json({
+                    error: 'Oferta no encontrada'
+                  }); 
+            }
+            return res.json({oferta})
+            
+        })
+    }
+    else{
+        return res.status(200).json({
+            mensaje: 'No puedes visualizar esta oferta porque no eres propietario del proyecto'
+        })
+    }
+}
 
 exports.eliminar = (req, res) => {
     oferta = req.oferta
@@ -149,7 +175,7 @@ exports.respuestaOferta = (req, res) => {
         }
         // SI LA RESPUESTA TIENE VALOR 1, LA OFERTA SERÁ RECHAZA POR EL USUARIO
         if(respuesta == 1) {
-
+            
             //BUSCA ESTADO CON VALOR RECHAZADO, PARA LUEGO MODIFICAR LA OFERTA RECHAZADA A SU NUEVO ESTADO
             Estado.findOne({nombre: 'Rechazado'})
             .exec((err, estado) => {
@@ -166,7 +192,8 @@ exports.respuestaOferta = (req, res) => {
                     }
                         res.json({ 
                             mensaje: 'Haz rechazado una oferta!', 
-                            oferta })
+                            oferta 
+                        })
                     
                 });
             })
@@ -201,13 +228,20 @@ exports.respuestaOferta = (req, res) => {
 
 };
 
-// exports.listaEstados = (req, res) => {
-//     Estado.find().exec((err, data) => {
-//         if(err) {
-//             return res.status(400).json({
-//                 error: 'No existen estados aún!'
-//               }); 
-//         }
-//         res.json({data})
-//     })
-// };
+exports.listadoOfertas = (req, res) => {
+    const user = req.profile
+
+    Oferta.find({ofertante: user._id})
+    .populate('estado', 'nombre')
+    .exec((err, data) => {
+        if(err) {
+            return res.status(400).json({
+                error: err
+              }); 
+        }
+        if(data.length === 0){
+            res.json({mensaje: 'Aún no tienes ofertas'})
+        }else{
+        res.json({data})}
+    })
+};

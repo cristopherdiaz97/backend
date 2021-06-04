@@ -44,7 +44,11 @@ exports.buscarUserComentario = (req, res, next, id) =>{
 exports.hacerComentario = (req, res) => {
     const usuario = req.profile
     const usuario2 = req.profile2
-    
+    if(!req.body.comentario ){
+        return res.json({
+            mensaje: 'Debes ingresar texto en tus comentarios'
+        })
+    }
     User.updateOne({ _id: usuario._id}, 
     {
         $push: { 
@@ -57,8 +61,8 @@ exports.hacerComentario = (req, res) => {
             return res.status(400).json({error : err})
         }else{
             res.json({
-                text: 'Comentario agregado!',
-                perfilUsuario : usuario.nombre
+                text: `Comentario agregado a ${usuario.userName}!`,
+                
             })
         }
     })  
@@ -68,14 +72,19 @@ exports.hacerComentario = (req, res) => {
 exports.respuestaComentario = (req, res) => {
     const usuario = req.profile
     const usuarioComenta = req.profile2
-    if(!req.body.respuesta){
+    //REVISAR SI LOS CAMPOS INCLUYEN DATOS
+    if(!req.body.respuesta || !req.body.id){
         return res.json({
             texto: 'No puedes enviar comentarios sin texto!'
         })
     }
+
+    //SE RECIBEN DESDE LOS PARAMETROS LA ID DEL USUARIO EN EL QUE ESTA EL COMENTARIO Y SE INGRESA LA RESPUESTA
+    //AL COMENTARIO EN CUESTIÓN
     User.updateOne(
         { '_id': usuario._id, 'comentarios._id': req.body.id },
         {
+            //INGRESA LA RESPUESTA AL COMENTARIO AL QUE SE LE ESTA RESPONDIENDO !!
             $push: { 
                 'comentarios.$.respuesta': 
                 {
@@ -90,7 +99,7 @@ exports.respuestaComentario = (req, res) => {
                 return res.status(400).json({error : err})
             }else{
                 res.json({
-                    text: 'Comentario agregado!'
+                    text: `Comentario agregado con exito a ${usuario.userName}`,
                     
                 })
             }
@@ -116,8 +125,8 @@ exports.modificarUser = (req, res) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        const {nombre, apellido, email, edad, password} = fields
-        if(!nombre || !apellido || !email || !edad || !password){
+        const {userName,nombre, apellido, email, edad, password} = fields
+        if(!userName || !nombre || !apellido || !email || !edad || !password){
             return res.status(400).json({
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
@@ -135,12 +144,12 @@ exports.modificarUser = (req, res) => {
                     error: 'La imagen no puede superar 1mb en tamaño'
                 })
             }
-
+            
             user.img.data = fs.readFileSync(files.img.path);
             user.img.contentType = files.img.type;
-            user.password = bcrypt.hashSync(fields.password);
+            
         }
-        
+        user.password = bcrypt.hashSync(fields.password);
         user.save((err, result) => {
         
             if(err){

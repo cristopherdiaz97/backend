@@ -2,6 +2,12 @@ const mongoose = require ('mongoose');
 const Schema = mongoose.Schema;
 const {ObjectId} = mongoose.Schema;
 const userSchema = new Schema ({
+    userName:{
+        type: String,
+        required: true,
+        trim: true,
+        unique: true
+    },
     nombre: {
         type:String,
         required: true,
@@ -36,7 +42,6 @@ const userSchema = new Schema ({
         type: String,
         required: true,
         trim: true,
-        
     },
     img: {
         data: Buffer,
@@ -47,7 +52,6 @@ const userSchema = new Schema ({
         type: ObjectId,
         ref: "Region",
         trim: true,
-        required: false
     },
     tipo: {
         type: Number,
@@ -83,11 +87,6 @@ const userSchema = new Schema ({
         ref: "Reservas",
         required: false
     },
-    publicaciones: [{
-        type: ObjectId,
-        ref: "Publicaciones",
-        required: false
-    }],
     likes: {
         type: Number,
         default: 0

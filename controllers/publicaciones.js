@@ -53,6 +53,7 @@ exports.create = (req, res, next ) => {
             res.json({result});
                
         })
+
     });
     
 }
@@ -147,7 +148,7 @@ exports.modificar = (req, res) => {
 
 exports.respuestaComentario = (req, res) => {
     const publicacion = req.publicacion
-    if(!req.body.respuesta){
+    if(!req.body.respuesta || !req.body.id){
         return res.json({
             mensaje: 'Comentario no debe ir vacío!'
         })
@@ -197,8 +198,7 @@ exports.hacerComentario = (req, res) => {
             return res.status(400).json({error : err})
         }else{
             res.json({
-                text: 'Comentario agregado!',
-                _id : publicacion._id
+                text: 'Comentario agregado con exito!',
             })
         }
     })  
@@ -210,7 +210,7 @@ exports.listaPublicaciones = (req, res) => {
     .populate('comentarios', 'comentario')
     .populate('creador', 'nombre')
     .populate('estiloTatuaje', 'nombre')
-    .populate('tatuado', 'nombre')
+    .populate('tatuado', 'userName')
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({
@@ -240,3 +240,23 @@ exports.likePublicacion = (req, res) => {
         res.json({mensaje: 'Oops! no pudiste dar like!' })
     }
 }
+
+exports.listaPublicacionesUsuarios = (req, res) => {
+    const user = req.profile
+
+    Publicaciones.find({creador: user._id})
+    .populate('estiloTatuaje', 'nombre')
+    .populate('tatuado', 'userName')
+    .populate('creador', 'userName')
+    .exec((err, data) => {
+        if(err) {
+            return res.status(400).json({
+                error: err
+              }); 
+        }
+        if(data.length === 0){
+            res.json({mensaje: 'Aún no tienes publicaciones'})
+        }else{
+        res.json({data})}
+    })
+};
