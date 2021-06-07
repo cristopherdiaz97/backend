@@ -33,6 +33,11 @@ exports.create = (req, res, next ) => {
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
         }
+        if(files.img.type == null){
+            return res.json({
+                error: 'Tú proyecto debe contener una imagen'
+            })
+        }
 
         if(files.img){
             //Tamaño mayor a 1mb 
@@ -130,7 +135,13 @@ exports.modificar = (req, res) => {
             })
         }
 
-        if(files.img.type != null){
+        if(files.img.type == null){
+            return res.json({
+                error: 'Tú publicación debe contener una imagen'
+            })
+        }
+
+        if(files.img){
             //Tamaño mayor a 1mb 
             if(files.img.size > 1000000){
                 return res.status(400).json({
@@ -196,3 +207,17 @@ exports.listaProyectosUsuarios = (req, res) => {
         res.json({data})}
     })
 };
+
+exports.img = (req, res, next) => {
+    if(req.proyecto.img.contentType == null){
+        return res.json({mensaje: 'No se pudo cargar tú imagen o no existe!'})
+    }
+    
+    if(req.proyecto.img.data){
+        res.set('Content-Type', req.proyecto.img.contentType)
+        
+        return res.send(req.proyecto.img.data)
+    }
+    
+    next()
+}

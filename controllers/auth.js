@@ -6,7 +6,6 @@ const formidable = require ('formidable');
 const fs = require ('fs');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
-
 exports.createUser = (req, res, next ) => {
 
     let form = new formidable.IncomingForm();
@@ -74,19 +73,17 @@ exports.createUser = (req, res, next ) => {
                
         })
     });
-
 }
 
 exports.loginUser = (req,res, next) => {
 
     
     const userData = {
-        userName: req.body.userName,
         email: req.body.email,
         password: req.body.password
     }
 
-    User.findOne ({email: userData.email, userName: userData.userName}, (err, user) =>{
+    User.findOne ({email: userData.email}, (err, user) =>{
         if(err) return req.status(500).send('Server error!');
         if(!user) {
             // Email no existe
@@ -114,7 +111,8 @@ exports.loginUser = (req,res, next) => {
                 
             } else{
             // password wrong
-              res.status(409).send({message: 'Usuario o contraseña incorrecta'});
+              res.status(409).json({mensaje: 'Usuario o contraseña incorrecta'});
+              console.log(res);
             }
         }
     });

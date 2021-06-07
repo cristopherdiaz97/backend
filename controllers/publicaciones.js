@@ -29,6 +29,11 @@ exports.create = (req, res, next ) => {
             })
         }
 
+        if(files.img.type == null){
+            return res.json({
+                error: 'Tú publicación debe contener una imagen'
+            })
+        }
         if(files.img){
             //Tamaño mayor a 1mb 
             if(files.img.size > 1000000){
@@ -115,7 +120,13 @@ exports.modificar = (req, res) => {
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
         }
-        
+
+        if(files.img.type == null){
+            return res.json({
+                error: 'Tú publicación debe contener una imagen'
+            })
+        }
+
         if(files.img){
             //Tamaño mayor a 1mb 
             if(files.img.size > 1000000 ){
@@ -126,9 +137,7 @@ exports.modificar = (req, res) => {
 
             publicacion.img.data = fs.readFileSync(files.img.path);
             publicacion.img.contentType = files.img.type;
-            if(!publicacion.img.contentType || !publicacion.img.data){
-                return res.status(400).json({error: 'Debe seleccionar una imagen'})
-            } 
+             
         }
         
         publicacion.save((err, result) => {
@@ -260,3 +269,17 @@ exports.listaPublicacionesUsuarios = (req, res) => {
         res.json({data})}
     })
 };
+
+exports.img = (req, res, next) => {
+    if(req.publicacion.img.contentType == null){
+        return res.json({mensaje: 'No se pudo cargar tú imagen o no existe!'})
+    }
+    
+    if(req.publicacion.img.data){
+        res.set('Content-Type', req.publicacion.img.contentType)
+        
+        return res.send(req.publicacion.img.data)
+    }
+    
+    next()
+}

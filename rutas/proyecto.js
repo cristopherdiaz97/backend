@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {create, modificar, buscar, eliminar, listaProyectos, proyectoPorId, listaProyectosUsuarios} = require ('../controllers/proyecto');
+const {create, modificar, buscar, eliminar, listaProyectos, proyectoPorId, listaProyectosUsuarios, img} = require ('../controllers/proyecto');
 const {buscarPorId} = require ('../controllers/user');
 const { requiereLogeo, isAuth, isAuthProyecto } = require ('../controllers/auth');
 
@@ -12,6 +12,7 @@ router.get('/proyecto/buscar/:proyectoId/:userId', requiereLogeo, isAuth, isAuth
 router.delete('/proyecto/eliminar/:proyectoId/:userId', requiereLogeo, isAuth, isAuthProyecto, eliminar);
 router.get('/proyecto/listado/:userId', requiereLogeo, listaProyectos);
 router.get('/proyecto/misProyectos/:userId', requiereLogeo, listaProyectosUsuarios);
+router.get('/proyecto/imagen/:proyectoId', img)
 
 
 router.param('userId', buscarPorId);
