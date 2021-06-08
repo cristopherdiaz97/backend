@@ -10,7 +10,7 @@ router.post('/proyecto/crear/:userId', requiereLogeo, isAuth, create);
 router.put('/proyecto/modificar/:proyectoId/:userId', requiereLogeo, isAuth, isAuthProyecto, modificar);
 router.get('/proyecto/buscar/:proyectoId/:userId', requiereLogeo, isAuth, isAuthProyecto, buscar);
 router.delete('/proyecto/eliminar/:proyectoId/:userId', requiereLogeo, isAuth, isAuthProyecto, eliminar);
-router.get('/proyecto/listado/:userId', requiereLogeo, listaProyectos);
+router.get('/proyecto/listado/:userId', requiereLogeo, isAuth, listaProyectos);
 router.get('/proyecto/misProyectos/:userId', requiereLogeo, listaProyectosUsuarios);
 router.get('/proyecto/imagen/:proyectoId', img)
 
