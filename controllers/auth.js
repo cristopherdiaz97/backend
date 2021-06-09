@@ -68,8 +68,17 @@ exports.createUser = (req, res, next ) => {
                 {
                     expiresIn: expiresIn
                 });
-                
-            res.json({result, accessToken});
+            const dataUser = { 
+                    id: result._id,
+                    user: result.userName,
+                    tipo: result.tipo,
+                    nombre : result.nombre,
+                    email : result.email,
+                    membresia: result.membresia,
+                    likes: result.likes,
+                    img: result.img
+            };
+            res.json({dataUser, accessToken});
                
         })
     });
