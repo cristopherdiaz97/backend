@@ -9,6 +9,7 @@ npm i bcryptjs body-parser cookie-parser cors dotenv express express-jwt express
 ####################
 Create .env
 ####################
+
 PORT= your port compare
 CONNDB= ir al atlas a ver la connección
 
