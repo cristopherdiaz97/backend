@@ -26,6 +26,9 @@ exports.createUser = (req, res, next ) => {
         // 1mb = 1000000b
 
         const {userName, nombre, apellido, email, edad, password} = fields
+        const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@gmail.cl|@hotmail.cl|@inacapmail.cl|@outlook.com|@outlook.cl|@icloud.com/
+        if(!emailRegex.test(email)) return res.json({error: 'Debe ingresar un email valido'})
+        
         if(!userName || !nombre || !apellido || !email || !edad || !password){
             return res.status(400).json({
                 error: 'Debe rellenar todos los campos Obligatorios!'
