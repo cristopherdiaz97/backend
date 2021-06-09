@@ -4,7 +4,7 @@ const router = express.Router();
 const {buscarPorId, buscarUserComentario, modificarUser, hacerComentario, respuestaComentario} = require ('../controllers/user');
 const { requiereLogeo, isAuth, isAdmin } = require ('../controllers/auth');
 
-router.get('/perfil/buscar/:userId', requiereLogeo, (req,res ) => {
+router.get('/perfil/buscar/:userId', requiereLogeo, isAuth, (req,res ) => {
     
     res.json({
         user: req.profile,

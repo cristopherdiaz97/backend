@@ -33,7 +33,7 @@ exports.create = (req, res, next) => {
     region.save((error,data) =>{
 
         if(error){
-            return res.status(400).json (error)
+            return res.status(400).json ({error: 'Ha ocurrido un error!'})
         }
         res.json({ data })
 
@@ -63,7 +63,7 @@ exports.modificar = (req, res) => {
     region.save((error,data) =>{
 
         if(error){
-            return res.status(400).json (error)
+            return res.status(400).json ({error: 'Ha ocurrido un error'})
         }
         res.json({ data })
 

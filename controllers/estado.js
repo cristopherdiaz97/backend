@@ -15,7 +15,7 @@ exports.create = (req, res, next) => {
 
         if(err){
             return res.status(400).json ({
-                error : errorHandler(err)
+                error : 'Ha ocurrido un error'
             })
         }
             res.json({ data })
@@ -45,7 +45,7 @@ exports.eliminar = (req, res) => {
 
     estado.remove((err, estadoEliminado)=>{
         if(err){
-            return res.status(400).json(err);
+            return res.status(400).json({error: 'Ha ocurrido un error'});
         }
         res.json({
             mensaje: `Estado ${estadoEliminado.nombre} eliminado con exito!`
@@ -62,7 +62,7 @@ exports.modificar = (req, res) => {
     estado.save((error,data) =>{
 
         if(error){
-            return res.status(400).json (error)
+            return res.status(400).json ({error: 'Ha ocurrido un error'})
         }
         res.json({ data })
 

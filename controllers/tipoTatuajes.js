@@ -16,7 +16,7 @@ exports.create = (req, res, next) => {
 
         if(error){
             return res.status(400).json ({
-                error : errorHandler(error)
+                error : 'Ha ocurrido un error'
             })
         }
         res.json({ data })
@@ -46,7 +46,7 @@ exports.eliminar = (req, res) => {
 
     tatuaje.remove((err, tatuajeEliminado)=>{
         if(err){
-            return res.status(400).json(err);
+            return res.status(400).json({error: 'Ha ocurrido un error'});
         }
         res.json({
             mensaje: `Tipo de tatuaje ${tatuajeEliminado.nombre} eliminado con exito!`
@@ -63,7 +63,7 @@ exports.modificar = (req, res) => {
     tatuaje.save((error,data) =>{
 
         if(error){
-            return res.status(400).json (error)
+            return res.status(400).json ({error: 'Ha ocurrido un error'})
         }
         res.json({ data })
 

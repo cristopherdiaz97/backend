@@ -21,7 +21,7 @@ exports.create = (req, res, next) => {
        
         if(estado.nombre === 'Terminado'){
             return res.status(200).json({
-                mensaje: `El proyecto: ${proyecto.nombre} ha sido Terminado!`
+                error: `El proyecto: ${proyecto.nombre} esta Terminado!`
             })
         }
     })
@@ -34,13 +34,13 @@ exports.create = (req, res, next) => {
 
     if(!proyecto, !perfil){
         return res.status(400).json({
-            mensaje: 'Oops! ha ocurrido un error'
+            error: 'Oops! ha ocurrido un error'
         })
     }
     
     if(proyecto.creador._id.equals(perfil._id) ){
         return res.status(400).json({
-            mensaje: 'No puedes realizar ofertas a tu propio proyecto!'
+            error: 'No puedes realizar ofertas a tu propio proyecto!'
         })
     }
     
@@ -59,10 +59,10 @@ exports.create = (req, res, next) => {
             })
             .exec( (err, result) => {
                 if(err){
-                    return res.status(400).json({error : err})
+                    return res.status(400).json({error : 'Ha ocurrido un error'})
                 }else{
                     res.json({
-                        text: `Tu oferta ha sido ingresada con exito al proyecto: ${proyecto.nombre}`,   
+                        mensaje: `Tu oferta ha sido ingresada con exito al proyecto: ${proyecto.nombre}`,   
                     })
                 }
             })
@@ -105,7 +105,7 @@ exports.buscar = (req, res) => {
     }
     else{
         return res.status(200).json({
-            mensaje: 'No puedes visualizar esta oferta porque no eres propietario del proyecto'
+            error: 'No puedes visualizar esta oferta porque no eres propietario del proyecto'
         })
     }
 }
@@ -117,7 +117,7 @@ exports.eliminar = (req, res) => {
         
         oferta.remove((err, ofertaEliminada)=>{
             if(err){
-                return res.status(400).json(err);
+                return res.status(400).json({error: 'Ha ocurrido un error'});
             }
             res.json({
                 mensaje: `Su oferta ha sido eliminada con exito!`
@@ -125,7 +125,7 @@ exports.eliminar = (req, res) => {
         }
         );
     }else {
-        return res.status(400).json ({mensaje : 'No tienes permisos para realizar esta acción'})
+        return res.status(400).json ({error : 'No tienes permisos para realizar esta acción'})
     }
 
     
@@ -137,7 +137,7 @@ exports.modificar = (req, res) => {
     const user = req.profile
     
     if(!req.body.descripcion || !req.body.valor) {
-        return res.status(400).json ({mensaje: 'Debe rellenar todos los campos obligatorios!'})
+        return res.status(400).json ({error: 'Debe rellenar todos los campos obligatorios!'})
     }
 
     if(user._id.equals(oferta.ofertante._id) || user.tipo == 0){
@@ -146,13 +146,13 @@ exports.modificar = (req, res) => {
         oferta.save((error,data) =>{
 
             if(error){
-                return res.status(400).json (error)
+                return res.status(400).json ({error: 'Ha ocurrido un error'})
             }
             res.json({ data })
     
       });
     }else {
-        return res.status(400).json ({mensaje : 'No tienes permisos para realizar esta acción'})
+        return res.status(400).json ({error : 'No tienes permisos para realizar esta acción'})
     }
 
 
@@ -170,7 +170,7 @@ exports.respuestaOferta = (req, res) => {
         // SI NO EXISTE RESPUESTA, DEBE INGRESAR UNA RESPUESTA
         if(!respuesta){
             res.status(400).json({
-                mensaje: 'Debes ingresar una respuesta'
+                error: 'Debes ingresar una respuesta'
             })
         }
         // SI LA RESPUESTA TIENE VALOR 1, LA OFERTA SERÁ RECHAZA POR EL USUARIO
@@ -188,7 +188,7 @@ exports.respuestaOferta = (req, res) => {
                 oferta.save((error,oferta) =>{
 
                     if(error){
-                        return res.status(400).json (error)
+                        return res.status(400).json ({error: 'Ha ocurrido un error'})
                     }
                         res.json({ 
                             mensaje: 'Haz rechazado una oferta!', 
@@ -222,7 +222,7 @@ exports.respuestaOferta = (req, res) => {
         }
     }else{
         res.status(400).json({
-            mensaje: 'No estas autorizado a realizar esta acción!'
+            error: 'No estas autorizado a realizar esta acción!'
         })
     }
 
@@ -236,11 +236,11 @@ exports.listadoOfertas = (req, res) => {
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({
-                error: err
+                error: 'Ha ocurrido un error'
               }); 
         }
         if(data.length === 0){
-            res.json({mensaje: 'Aún no tienes ofertas'})
+            res.json({error: 'Aún no tienes ofertas'})
         }else{
         res.json({data})}
     })

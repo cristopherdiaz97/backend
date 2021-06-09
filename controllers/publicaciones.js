@@ -51,7 +51,7 @@ exports.create = (req, res, next ) => {
         
             if(err){
                 return res.status(400).json({
-                    error: errorHandler(err)
+                    error: 'Ha ocurrido un error'
                 });
             }
                 
@@ -86,7 +86,7 @@ exports.eliminar = (req, res) => {
 
     publicacion.remove((err, publicacionEliminada)=>{
         if(err){
-            return res.status(400).json(err);
+            return res.status(400).json({error: 'Ha ocurrido un error'});
         }
         res.json({
             mensaje: `Publicacion ${publicacionEliminada.nombre} eliminada con exito!`
@@ -144,7 +144,7 @@ exports.modificar = (req, res) => {
         
             if(err){
                 return res.status(400).json({
-                    error: errorHandler(err)
+                    error: 'Ha ocurrido un error'
                 });
             }
             
@@ -159,7 +159,7 @@ exports.respuestaComentario = (req, res) => {
     const publicacion = req.publicacion
     if(!req.body.respuesta || !req.body.id){
         return res.json({
-            mensaje: 'Comentario no debe ir vacío!'
+            error: 'Comentario no debe ir vacío!'
         })
     }
     Publicaciones.updateOne(
@@ -179,7 +179,7 @@ exports.respuestaComentario = (req, res) => {
                 return res.status(400).json({error : err})
             }else{
                 res.json({
-                    text: 'Comentario agregado!',
+                    mensaje: 'Comentario agregado!',
                     
                 })
             }
@@ -190,7 +190,7 @@ exports.respuestaComentario = (req, res) => {
 exports.hacerComentario = (req, res) => {
     if(!req.body.comentario){
         return res.json({
-            mensaje: 'Comentario no debe ir vacío!'
+            error: 'Comentario no debe ir vacío!'
         })
     }
     const publicacion = req.publicacion
@@ -207,7 +207,7 @@ exports.hacerComentario = (req, res) => {
             return res.status(400).json({error : err})
         }else{
             res.json({
-                text: 'Comentario agregado con exito!',
+                mensaje: 'Comentario agregado con exito!',
             })
         }
     })  
@@ -238,7 +238,7 @@ exports.likePublicacion = (req, res) => {
         
         if(err){
             return res.status(400).json({
-                error: errorHandler(err)
+                error: 'Ha ocurrido un error'
             });
         }
             
@@ -246,7 +246,7 @@ exports.likePublicacion = (req, res) => {
            
     })
     }else{
-        res.json({mensaje: 'Oops! no pudiste dar like!' })
+        res.json({error: 'Oops! no pudiste dar like!' })
     }
 }
 
@@ -260,11 +260,11 @@ exports.listaPublicacionesUsuarios = (req, res) => {
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({
-                error: err
+                error: 'Ha ocurrido un error'
               }); 
         }
         if(data.length === 0){
-            res.json({mensaje: 'Aún no tienes publicaciones'})
+            res.json({error: 'Aún no tienes publicaciones'})
         }else{
         res.json({data})}
     })
@@ -272,7 +272,7 @@ exports.listaPublicacionesUsuarios = (req, res) => {
 
 exports.img = (req, res, next) => {
     if(req.publicacion.img.contentType == null){
-        return res.json({mensaje: 'No se pudo cargar tú imagen o no existe!'})
+        return res.json({error: 'No se pudo cargar tú imagen o no existe!'})
     }
     
     if(req.publicacion.img.data){

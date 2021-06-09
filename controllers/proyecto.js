@@ -10,7 +10,7 @@ exports.create = (req, res, next ) => {
      
     if(req.profile.membresia == false) {
         return res.json({
-            mensaje: 'Lo sentimos, debes adquirir una membresía para utilizar esta opción'
+            error: 'Lo sentimos, debes adquirir una membresía para utilizar esta opción'
         })
     }
     form.parse(req, (err, fields, files) => {
@@ -55,7 +55,7 @@ exports.create = (req, res, next ) => {
         
             if(err){
                 return res.status(400).json({
-                    error: errorHandler(err)
+                    error: 'Ha ocurrido un error inesperado'
                 });
             }
             
@@ -156,7 +156,7 @@ exports.modificar = (req, res) => {
         
             if(err){
                 return res.status(400).json({
-                    error: errorHandler(err)
+                    error: 'Ha ocurrido un error'
                 });
             }
             
@@ -176,7 +176,7 @@ exports.eliminar = (req, res) => {
 
     proyecto.remove((err, proyectoEliminado)=>{
         if(err){
-            return res.status(400).json(err);
+            return res.status(400).json({error: 'Ha ocurrido un error'});
         }
         res.json({
             mensaje: `Tú proyecto: ${proyectoEliminado.nombre}, ha sido eliminado con exito!`
@@ -198,11 +198,11 @@ exports.listaProyectosUsuarios = (req, res) => {
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({
-                error: err
+                error: 'Ha ocurrido un error'
               }); 
         }
         if(data.length === 0){
-            res.json({mensaje: 'Aún no tienes proyectos'})
+            res.json({error: 'Aún no tienes proyectos'})
         }else{
         res.json({data})}
     })
@@ -210,7 +210,7 @@ exports.listaProyectosUsuarios = (req, res) => {
 
 exports.img = (req, res, next) => {
     if(req.proyecto.img.contentType == null){
-        return res.json({mensaje: 'No se pudo cargar tú imagen o no existe!'})
+        return res.json({error: 'No se pudo cargar tú imagen o no existe!'})
     }
     
     if(req.proyecto.img.data){

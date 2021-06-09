@@ -46,7 +46,7 @@ exports.hacerComentario = (req, res) => {
     const usuario2 = req.profile2
     if(!req.body.comentario ){
         return res.json({
-            mensaje: 'Debes ingresar texto en tus comentarios'
+            error: 'Debes ingresar texto en tus comentarios'
         })
     }
     User.updateOne({ _id: usuario._id}, 
@@ -58,10 +58,10 @@ exports.hacerComentario = (req, res) => {
     ).populate('comentarios._id')
     .exec( (err, result) => {
         if(err){
-            return res.status(400).json({error : err})
+            return res.status(400).json({error : 'Ha ocurrido un error'})
         }else{
             res.json({
-                text: `Comentario agregado a ${usuario.userName}!`,
+                mensaje: `Comentario agregado a ${usuario.userName}!`,
                 
             })
         }
@@ -75,7 +75,7 @@ exports.respuestaComentario = (req, res) => {
     //REVISAR SI LOS CAMPOS INCLUYEN DATOS
     if(!req.body.respuesta || !req.body.id){
         return res.json({
-            texto: 'No puedes enviar comentarios sin texto!'
+            error: 'No puedes enviar comentarios sin texto!'
         })
     }
 
@@ -99,7 +99,7 @@ exports.respuestaComentario = (req, res) => {
                 return res.status(400).json({error : err})
             }else{
                 res.json({
-                    text: `Comentario agregado con exito a ${usuario.userName}`,
+                    mensaje: `Comentario agregado con exito a ${usuario.userName}`,
                     
                 })
             }
@@ -154,7 +154,7 @@ exports.modificarUser = (req, res) => {
         
             if(err){
                 return res.status(400).json({
-                    error: errorHandler(err)
+                    error: 'Ha ocurrido un error'
                 });
             }
             

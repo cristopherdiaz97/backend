@@ -55,7 +55,7 @@ exports.createUser = (req, res, next ) => {
         
             if(err){
                 return res.status(400).json({
-                    error: err
+                    error: 'Ha ocurrido un error inesperado'
                 });
             }
             
@@ -84,10 +84,10 @@ exports.loginUser = (req,res, next) => {
     }
 
     User.findOne ({email: userData.email}, (err, user) =>{
-        if(err) return req.status(500).send('Server error!');
+        if(err) return req.status(500).send({error: 'Server error!'});
         if(!user) {
             // Email no existe
-            res.status(409).send({message: 'Usuario o contraseña incorrecta'});
+            res.status(409).send({error: 'Usuario o contraseña incorrecta'});
         }  else{
             
             //Comparacion password encriptadas
@@ -111,8 +111,8 @@ exports.loginUser = (req,res, next) => {
                 
             } else{
             // password wrong
-              res.status(409).json({mensaje: 'Usuario o contraseña incorrecta'});
-              console.log(res);
+              res.status(409).json({error: 'Usuario o contraseña incorrecta'});
+              
             }
         }
     });
@@ -133,7 +133,7 @@ exports.requiereLogeo = (req, res, next) => {
       jwt.verify(token, SECRET_KEY, (err, user) => {     
           
         if (err) {
-          return res.json({ mensaje: 'Oops! error en token' });    
+          return res.json({ error: 'Oops! error en token' });    
         } else {
           
           req.user = user.id;   
@@ -143,7 +143,7 @@ exports.requiereLogeo = (req, res, next) => {
       });
     } else {
       res.send({ 
-          mensaje: 'Necesita estar logeado' 
+          error: 'Necesita estar logeado' 
       });
     }
  };
@@ -172,7 +172,7 @@ exports.isAuth = (req, res, next) =>{
      }
      else{
          return res.status(200).json({
-             mensaje: 'No tienes permisos para realizar esta acción'
+             error: 'No tienes permisos para realizar esta acción'
          })
      }
 
@@ -188,7 +188,7 @@ exports.isAuth = (req, res, next) =>{
      }
      else{
          return res.status(200).json({
-             mensaje: 'No tienes permisos para realizar esta acción'
+             error: 'No tienes permisos para realizar esta acción'
          })
      }
 
@@ -212,7 +212,7 @@ exports.isAuthOferta = (req, res, next) => {
     if(proyecto.creador._id.equals(usuario._id))
     {
         return res.json({
-            mensaje: 'No puedes realizar ofertas a tus propios proyectos!'
+            error: 'No puedes realizar ofertas a tus propios proyectos!'
         })
     }else{
         next();
@@ -228,7 +228,7 @@ exports.isAuthOfertaCreador = (req, res, next) => {
         next();
     }else{
         return res.json({
-            mensaje: 'No tienes los permisos necesarios!'
+            error: 'No tienes los permisos necesarios!'
         })
     }
      
