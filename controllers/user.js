@@ -17,7 +17,6 @@ exports.buscarPorId = (req, res, next, id) =>{
             })
         }
         req.profile = user;
-        
         next();
     })
     
@@ -165,3 +164,18 @@ exports.modificarUser = (req, res) => {
     
 }
 
+exports.buscarPorNombre = (req, res) => {
+    
+    User.find({userName: {$regex: req.body.user, $options: '$i'}})
+    .select('userName img -_id')
+    .exec((err, users) => {
+        if(err || !users){
+            res.status(400).json({
+                error: 'Usuario no encontrado'
+            })
+        }
+        res.json(
+            {users}
+        )
+    }) 
+}

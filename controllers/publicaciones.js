@@ -22,8 +22,8 @@ exports.create = (req, res, next ) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        const {nombre, descripcion, estiloTatuaje, etiquetado} = fields
-        if(!nombre || !descripcion || !estiloTatuaje || !etiquetado){
+        const {nombre, descripcion, estiloTatuaje} = fields
+        if(!nombre || !descripcion || !estiloTatuaje){
             return res.status(400).json({
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
