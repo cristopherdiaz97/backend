@@ -22,8 +22,8 @@ exports.create = (req, res, next ) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        const {nombre, descripcion, estiloTatuaje, tatuado} = fields
-        if(!nombre || !descripcion || !estiloTatuaje || !tatuado){
+        const {nombre, descripcion, estiloTatuaje, etiquetado} = fields
+        if(!nombre || !descripcion || !estiloTatuaje || !etiquetado){
             return res.status(400).json({
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
@@ -219,7 +219,7 @@ exports.listaPublicaciones = (req, res) => {
     .populate('comentarios', 'comentario')
     .populate('creador', 'nombre')
     .populate('estiloTatuaje', 'nombre')
-    .populate('tatuado', 'userName')
+    .populate('etiquetado', 'userName')
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({
@@ -255,7 +255,7 @@ exports.listaPublicacionesUsuarios = (req, res) => {
 
     Publicaciones.find({creador: user._id})
     .populate('estiloTatuaje', 'nombre')
-    .populate('tatuado', 'userName')
+    .populate('etiquetado', 'userName')
     .populate('creador', 'userName')
     .exec((err, data) => {
         if(err) {

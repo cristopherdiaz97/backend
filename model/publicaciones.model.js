@@ -54,7 +54,7 @@ const publicacionSchema = new Schema ({
         ref: "estilosTatuajes",
         required: false
     },
-    tatuado:{
+    etiquetado:{
         type: ObjectId,
         ref: "Users",
         required: false
