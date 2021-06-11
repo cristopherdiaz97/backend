@@ -43,9 +43,9 @@ const ofertaRoutes = require ('./rutas/ofertas');
     app.use('/api', ofertaRoutes);
 
 
-    app.use('/',  (err, res) => {
-        res.json({mensaje: 'Página principal Inkapp!'});
-    })
+    // app.use('/',  (err, res) => {
+    //     res.json({mensaje: 'Página principal Inkapp!'});
+    // })
 
     // RESCATAR PUERTO PARA SERVIDOR 
     const port =  process.env.PORT || 4000
