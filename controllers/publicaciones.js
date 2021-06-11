@@ -28,12 +28,7 @@ exports.create = (req, res, next ) => {
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
         }
-
-        if(files.img.type == null){
-            return res.json({
-                error: 'Tú publicación debe contener una imagen'
-            })
-        }
+        
         if(files.img){
             //Tamaño mayor a 1mb 
             if(files.img.size > 1000000){
