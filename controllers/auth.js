@@ -96,7 +96,9 @@ exports.loginUser = (req,res, next) => {
     }
 
     User.findOne ({email: userData.email}, (err, user) =>{
+
         if(err) return res.status(500).send({error: 'Server error!'});
+
         if(!user) {
             // Email no existe
             res.status(409).send({error: 'Usuario o contraseña incorrecta'});

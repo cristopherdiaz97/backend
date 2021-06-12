@@ -21,7 +21,7 @@ const tiposTatuajesRoutes = require('./rutas/tipoTatuajes');
 const publicacionesRoutes = require ('./rutas/publicaciones');
 const proyectoRoutes = require ('./rutas/proyecto');
 const ofertaRoutes = require ('./rutas/ofertas');
-
+const chatroomRoutes = require ('./rutas/chatroom.js')
     //Iniciar base de datos
     DB();
 
@@ -41,9 +41,9 @@ const ofertaRoutes = require ('./rutas/ofertas');
     app.use('/api', publicacionesRoutes);
     app.use('/api', proyectoRoutes);
     app.use('/api', ofertaRoutes);
-
-
-    app.use('/',  (err, res) => {
+    app.use('/api', chatroomRoutes)
+    
+    app.use('/api',  (err, res) => {
         res.json({mensaje: 'Página principal Inkapp!'});
     })
 
@@ -51,7 +51,75 @@ const ofertaRoutes = require ('./rutas/ofertas');
     const port =  process.env.PORT || 4000
     server.listen(port,()=>{     
         console.log(`Server is running on port ${port}`); 
-    });  
+    });
+
+    const io = require('socket.io')(server, {
+        cors: {
+          origin: '*',
+        }
+      });
+
+    //Variables entorno Socket.io
+    const jwt = require ('jsonwebtoken');
+    const SECRET_KEY = 'secretkey1234567';
+
+    //Modelos para socket.io
+    const User = require('./model/user.model')
+    const Message = require('./model/message.model')
+    
+    io.use(async (socket, next) => {
+        
+        try{
+            const token = socket.handshake.query.token
+            const payload = await jwt.verify(token, SECRET_KEY)
+            socket.userId = payload.id
+            next()
+        }catch(err){
+            console.log(err);
+        }
+    })
+    
+    io.on("connection", (socket) =>{
+        console.log("Connected: "  + socket.userId);
+    
+        socket.on("disconnect", () => {
+            console.log("Disconnected: " + socket.userId);
+        })
+    
+        socket.on('joinRoom', async ({chatroomId}) => {
+            socket.join(chatroomId)
+            console.log('A user joined chatroom: ' + chatroomId);
+            const user = await User.findOne({_id: socket.userId})
+            socket.broadcast.to(chatroomId).emit('newMessage', {message: 'Ha ingresado al chat', name: user.userName, userId: socket.userId});
+            
+        })
+    
+        socket.on('leaveRoom', async ({chatroomId}) => {
+            socket.leave(chatroomId)
+            const user = await User.findOne({_id: socket.userId})
+            console.log('A user left chatroom: ' + chatroomId);
+            socket.broadcast.to(chatroomId).emit('newMessage', {message: 'Ha abandonado el chat', name: user.userName, userId: socket.userId})
+        })
+    
+        socket.on('chatroomMessage', async ({chatroomId, message}) => {
+            if(message.trim().length > 0){
+                const user = await User.findOne({_id: socket.userId})
+                const newMessage = new Message({
+                    chatroom: chatroomId, 
+                    user: socket.userId, 
+                    message: message})
+    
+                io.to(chatroomId).emit('newMessage', {
+                    message,
+                    name: user.userName,
+                    userId: socket.userId,
+                })
+    
+                await newMessage.save()
+            }
+           
+        })
+    })  
     // load env variables 
     const dotenv = require('dotenv'); 
     dotenv.config() 

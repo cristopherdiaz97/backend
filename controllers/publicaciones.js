@@ -22,18 +22,15 @@ exports.create = (req, res, next ) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        const {nombre, descripcion, estiloTatuaje} = fields
+
+        const {nombre, descripcion, estiloTatuaje, etiquetado} = fields
+
         if(!nombre || !descripcion || !estiloTatuaje){
             return res.status(400).json({
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
         }
-
-        if(files.img.type == null){
-            return res.json({
-                error: 'Tú publicación debe contener una imagen'
-            })
-        }
+        
         if(files.img){
             //Tamaño mayor a 1mb 
             if(files.img.size > 1000000){
