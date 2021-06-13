@@ -111,18 +111,18 @@ exports.modificar = (req, res) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        const {nombre, descripcion} = fields
-        if(!nombre || !descripcion){
-            return res.status(400).json({
-                error: 'Debe rellenar todos los campos Obligatorios!'
-            })
-        }
+        // const {nombre, descripcion} = fields
+        // if(!nombre || !descripcion){
+        //     return res.status(400).json({
+        //         error: 'Debe rellenar todos los campos Obligatorios!'
+        //     })
+        // }
 
-        if(files.img.type == null){
-            return res.json({
-                error: 'Tú publicación debe contener una imagen'
-            })
-        }
+        // if(files.img.type == null){
+        //     return res.json({
+        //         error: 'Tú publicación debe contener una imagen'
+        //     })
+        // }
 
         if(files.img){
             //Tamaño mayor a 1mb 

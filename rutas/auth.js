@@ -3,8 +3,6 @@ const router = express.Router();
 
 const {createUser, loginUser, deslogeo} = require ('../controllers/auth');
 
-
-
 //RUTAS POST REGISTRO 
 router.post('/register', createUser);
 router.post('/login', loginUser);

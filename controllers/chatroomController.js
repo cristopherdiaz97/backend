@@ -38,20 +38,23 @@ exports.createChatroom = async (req, res) => {
     
 }
 
-exports.getAllChatrooms = async (req, res) =>{
-    Chatroom.find().exec((err, data) => {
+exports.getAllChatrooms =  (req, res) =>{
+    
+     Chatroom.find().exec((err, data) => {
         if(err) {
             return res.status(400).json({
                 error: 'No existen chatrooms aún!'
               }); 
-        }
-        res.json(data)
+        }    
+        
+        res.status(200).json(data)
     })
+    
 }
 
 exports.deleteChatroom = async (req, res) => {
     
-    const user = await User.findOne({_id: req.profil._id})
+    const user = await User.findOne({_id: req.profile._id})
     
     if( user.tipo === 1 || user.tipo === 2 ){
         res.json({error: 'No tienes permisos para crear chatrooms!'})

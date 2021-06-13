@@ -179,3 +179,17 @@ exports.buscarPorNombre = (req, res) => {
         )
     }) 
 }
+
+exports.img = (req, res, next) => {
+    if(req.profile.img.contentType == null){
+        return res.json({error: 'No se pudo cargar tú imagen o no existe!'})
+    }
+    
+    if(req.profile.img.data){
+        res.set('Content-Type', req.profile.img.contentType)
+        
+        return res.send(req.profile.img.data)
+    }
+    
+    next()
+}
