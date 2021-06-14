@@ -9,7 +9,7 @@ exports.create = (req, res, next) => {
     const proyecto = req.proyecto
     const perfil = req.profile
     const oferta = new Oferta(req.body)
-    const {descripcion, valor, estado} = oferta
+    const {descripcion, valor} = oferta
     oferta.ofertante = perfil._id
     
     Estado.findById(proyecto.estado).exec((err, estado) => {
@@ -18,15 +18,15 @@ exports.create = (req, res, next) => {
                 error: 'Estado no encontrado'
               }); 
         }
-       
+        
         if(estado.nombre === 'Terminado'){
             return res.status(200).json({
                 error: `El proyecto: ${proyecto.nombre} esta Terminado!`
             })
         }
     })
-
-    if(!descripcion, !valor, !estado) {
+    
+    if(!descripcion, !valor) {
         return res.status(400).json({
           error: 'Debe ingresar todos los campos obligatorios!'
         }); 
@@ -43,30 +43,41 @@ exports.create = (req, res, next) => {
             error: 'No puedes realizar ofertas a tu propio proyecto!'
         })
     }
-    
-    oferta.save((err, ofertaIngresada) => {
-        
-        if(err){
-            return res.status(400).json ({
-                error : errorHandler(err)
+    Estado.findOne({nombre: 'En espera'}).exec((err, estado) => {
+        if(err || !estado) {
+            return rees.status(400).json({
+                error: 'Oops ha ocurrido un error'
             })
         }
-        Proyecto.updateOne({ _id: proyecto._id}, 
-            {
-                $push: { 
-                    oferta: ofertaIngresada._id
+        
+        oferta.estado = estado._id
+        
+        oferta.save((err, ofertaIngresada) => {
+        
+            if(err){
+                return res.status(400).json ({
+                    error : 'Ha ocurrido un error'
+                })
             }
-            })
-            .exec( (err, result) => {
-                if(err){
-                    return res.status(400).json({error : 'Ha ocurrido un error'})
-                }else{
-                    res.json({
-                        mensaje: `Tu oferta ha sido ingresada con exito al proyecto: ${proyecto.nombre}`,   
-                    })
+            Proyecto.updateOne({ _id: proyecto._id}, 
+                {
+                    $push: { 
+                        oferta: ofertaIngresada._id
                 }
-            })
+                })
+                .exec( (err, result) => {
+                    if(err){
+                        return res.status(400).json({error : 'Ha ocurrido un error'})
+                    }else{
+                        res.json({
+                            mensaje: `Tu oferta ha sido ingresada con exito al proyecto: ${proyecto.nombre}`,   
+                        })
+                    }
+                })
+        })
+
     })
+    
 };
 
 exports.ofertaPorId = (req, res, next, id) => {
