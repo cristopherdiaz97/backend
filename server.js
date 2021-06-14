@@ -107,13 +107,12 @@ const chatroomRoutes = require ('./rutas/chatroom.js')
             console.log(socket.userId)
             if(message.trim().length > 0){
                 const user = await User.findOne({_id: socket.userId})
-                console.log(user)
-
+                
                 const newMessage = new Message({
                     chatroom: chatroomId, 
                     user: socket.userId, 
                     message: message})
-                console.log(newMessage)
+                
                 io.to(chatroomId).emit('newMessage', {
                     message,
                     name: user.userName,

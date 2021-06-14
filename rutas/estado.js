@@ -11,7 +11,10 @@ router.put('/estado/modificar/:estadoId/:userId', requiereLogeo, isAuth, isAdmin
 router.get('/estado/buscar/:estadoId/:userId', requiereLogeo, isAuth, buscar);
 router.delete('/estado/eliminar/:estadoId/:userId', requiereLogeo, isAuth, isAdmin, eliminar);
 router.get('/estado/listado/:userId', requiereLogeo, isAuth, listaEstados)
+
+
 router.param('userId', buscarPorId);
 router.param('estadoId', estadoPorId);
+
 
 module.exports = router;    

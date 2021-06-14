@@ -3,6 +3,7 @@ const { errorHandler } = require ('../helpers/dbErrorHandler');
 const _ = require( 'lodash');
 const formidable = require ('formidable');
 const fs = require ('fs');
+const Estado = require ('../model/estado.model')
 
 exports.create = (req, res, next ) => {
     let form = new formidable.IncomingForm();
@@ -13,6 +14,8 @@ exports.create = (req, res, next ) => {
             error: 'Lo sentimos, debes adquirir una membresía para utilizar esta opción'
         })
     }
+
+
     form.parse(req, (err, fields, files) => {
 
         
@@ -27,8 +30,10 @@ exports.create = (req, res, next ) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        const {nombre, tamaño, parteCuerpo, estiloTatuaje, estado} = fields
-        if(!nombre || !tamaño || !parteCuerpo || !estiloTatuaje || !estado){
+        const {nombre, tamaño, parteCuerpo, estiloTatuaje} = fields
+        
+                
+        if(!nombre || !tamaño || !parteCuerpo || !estiloTatuaje){
             return res.status(400).json({
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
@@ -51,6 +56,14 @@ exports.create = (req, res, next ) => {
             proyecto.img.contentType = files.img.type;
         }
         proyecto.creador = req.profile._id
+        Estado.findOne({nombre: 'En espera'})
+            .exec((err, estado) => {
+                if(err || !estado) {
+                    return res.status(400).json({
+                        error: 'No existen estados aún!'
+                    }); 
+                }
+        proyecto.estado = estado._id 
         proyecto.save((err, result) => {
         
             if(err){
@@ -65,6 +78,7 @@ exports.create = (req, res, next ) => {
             });
                
         })
+    })
     });
     
 }
