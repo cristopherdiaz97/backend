@@ -214,7 +214,7 @@ exports.hacerComentario = (req, res) => {
 exports.listaPublicaciones = (req, res) => {
     Publicaciones.find()
     .populate('comentarios', 'comentario')
-    .populate('creador', 'nombre')
+    .populate('creador', 'userName')
     .populate('estiloTatuaje', 'nombre')
     .populate('etiquetado', 'userName')
     .exec((err, data) => {

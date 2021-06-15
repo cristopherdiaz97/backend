@@ -41,6 +41,7 @@ exports.buscarUserComentario = (req, res, next, id) =>{
 };
 
 exports.hacerComentario = (req, res) => {
+    
     const usuario = req.profile
     const usuario2 = req.profile2
     if(!req.body.comentario ){

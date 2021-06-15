@@ -13,7 +13,7 @@ router.get('/inicio/buscar/:publicacionId/:userId', requiereLogeo, isAuth, busca
 router.delete('/publicacion/eliminar/:publicacionId/:userId', requiereLogeo, isAuth, isAuthPublicaciones, eliminar);
 router.put('/publicacion/modificar/:publicacionId/:userId', requiereLogeo, isAuth, isAuthPublicaciones, modificar);
 router.post('/publicacion/crear/:userId', requiereLogeo, isAuth, create);
-router.get('/inicio/:userId', requiereLogeo, isAuth, listaPublicaciones);
+router.get('/inicio/', listaPublicaciones);
 router.put('/publicacion/comentario/:publicacionId/:userId', requiereLogeo, isAuth, hacerComentario);
 router.put('/publicacion/comentario/respuesta/:publicacionId/:userId', requiereLogeo, isAuth, respuestaComentario);
 router.post('/publicacion/likes/:publicacionId/:userId', requiereLogeo, isAuth, likePublicacion)
