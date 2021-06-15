@@ -187,6 +187,11 @@ exports.respuestaOferta = (req, res) => {
         // SI LA RESPUESTA TIENE VALOR 1, LA OFERTA SERÁ RECHAZA POR EL USUARIO
         if(respuesta == 1) {
             
+            if(proyecto.estado.nombre == 'Terminado'){
+                return res.json({
+                    error: 'Tu proyecto esta terminado, no puedes manipular ofertas'
+                })
+            }
             //BUSCA ESTADO CON VALOR RECHAZADO, PARA LUEGO MODIFICAR LA OFERTA RECHAZADA A SU NUEVO ESTADO
             Estado.findOne({nombre: 'Rechazado'})
             .exec((err, estado) => {
@@ -211,6 +216,12 @@ exports.respuestaOferta = (req, res) => {
             //SI LA RESPUESTA ES 0, SIGNIFICA QUE ACEPTA LA OFERTA ENVIADA AL PROYECTO 
         }else if (respuesta == 0) {
             //BUSCA ESTADO CON VALOR ACEPTADO, PARA LUEGO MODIFICAR LA OFERTA ACEPTADA A SU NUEVO ESTADO
+           if(proyecto.estado.nombre == 'Terminado'){
+               return res.json({
+                   error: 'Tu proyecto esta terminado no puedes manipular ofertas'
+               })
+           }
+
             Estado.findOne({nombre: 'Aceptado'})
             .exec((err, estado) => {
                 if(err) {
@@ -219,17 +230,42 @@ exports.respuestaOferta = (req, res) => {
                     }); 
                 }
                 oferta.estado = estado._id
+
                 oferta.save((error,oferta) =>{
 
                     if(error){
                         return res.status(400).json (error)
-                    }  
-                    return res.status(200).json({
-                        mensaje: 'Felicidades, haz aceptado una oferta!',
-                        oferta: oferta
+                    }
+
+                    Estado.findOne({nombre: 'Terminado'})
+                    .exec((err, result) => {
+                        
+                        if(err) {
+                            return res.status(400).json({ 
+                                error: 'Ha ocurrido un error'
+                            })
+                        }
+                        
+                        Proyecto.findByIdAndUpdate({_id: proyecto._id}, {
+                            estado: result._id
+                        }).exec((err, resultado) => {
+                            if(err){
+                                return res.status()
+                            }
+                            if(resultado){
+                                return res.status(200).json({
+                                    mensaje: 'Felicidades, haz aceptado una oferta!',
+                                    oferta: oferta
+                                })
+                            }
+                            
+                        })    
+                        
                     })
                 });
-            })   
+              
+            })
+
         }
     }else{
         res.status(400).json({
