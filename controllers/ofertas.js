@@ -4,27 +4,18 @@ const { errorHandler } = require ('../helpers/dbErrorHandler');
 const Proyecto = require ('../model/proyecto.model');
 
 
-
 exports.create = (req, res, next) => {
     const proyecto = req.proyecto
     const perfil = req.profile
+    
     const oferta = new Oferta(req.body)
     const {descripcion, valor} = oferta
     oferta.ofertante = perfil._id
-    
-    Estado.findById(proyecto.estado).exec((err, estado) => {
-        if(err || !estado) {
-            return res.status(400).json({
-                error: 'Estado no encontrado'
-              }); 
-        }
-        
-        if(estado.nombre === 'Terminado'){
-            return res.status(200).json({
-                error: `El proyecto: ${proyecto.nombre} esta Terminado!`
-            })
-        }
-    })
+    if(proyecto.estado.nombre === 'Terminado') {
+        return res.json({
+            error: `El proyecto ${proyecto.nombre} esta terminado`
+        })
+    }
     
     if(!descripcion, !valor) {
         return res.status(400).json({
@@ -45,7 +36,7 @@ exports.create = (req, res, next) => {
     }
     Estado.findOne({nombre: 'En espera'}).exec((err, estado) => {
         if(err || !estado) {
-            return rees.status(400).json({
+            return res.status(400).json({
                 error: 'Oops ha ocurrido un error'
             })
         }
@@ -69,7 +60,7 @@ exports.create = (req, res, next) => {
                     if(err){
                         return res.status(400).json({error : 'Ha ocurrido un error'})
                     }else{
-                        res.json({
+                        return res.json({
                             mensaje: `Tu oferta ha sido ingresada con exito al proyecto: ${proyecto.nombre}`,   
                         })
                     }
@@ -175,6 +166,7 @@ exports.respuestaOferta = (req, res) => {
     const oferta = req.oferta
     const user = req.profile
     const respuesta = req.body.respuesta
+    
     //COMPARA AL CREADOR DEL PROYECTO, PARA QUE SOLO EL PUEDA INGRESAR UNA RESPUESTA A SUS OFERTAS
     if(proyecto.creador._id.equals(user._id)) {
         
@@ -185,7 +177,7 @@ exports.respuestaOferta = (req, res) => {
             })
         }
         // SI LA RESPUESTA TIENE VALOR 1, LA OFERTA SERÁ RECHAZA POR EL USUARIO
-        if(respuesta == 1) {
+        if(respuesta == 'rechazar') {
             
             if(proyecto.estado.nombre == 'Terminado'){
                 return res.json({
@@ -214,7 +206,7 @@ exports.respuestaOferta = (req, res) => {
                 });
             })
             //SI LA RESPUESTA ES 0, SIGNIFICA QUE ACEPTA LA OFERTA ENVIADA AL PROYECTO 
-        }else if (respuesta == 0) {
+        }else if (respuesta == 'aceptar') {
             //BUSCA ESTADO CON VALOR ACEPTADO, PARA LUEGO MODIFICAR LA OFERTA ACEPTADA A SU NUEVO ESTADO
            if(proyecto.estado.nombre == 'Terminado'){
                return res.json({
