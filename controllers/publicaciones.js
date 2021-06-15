@@ -62,7 +62,10 @@ exports.create = (req, res, next ) => {
 
 exports.publicacionPorId = (req, res, next, id) => {
     Publicaciones.findById(id)
-    .populate('comentarios')
+    .populate('comentarios', 'comentario')
+    .populate('creador', 'userName')
+    .populate('estiloTatuaje', 'nombre')
+    .populate('etiquetado', 'userName')
     .exec((err, publicacion) => {
         if(err || !publicacion) {
             return res.status(400).json({
