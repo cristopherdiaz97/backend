@@ -4,17 +4,17 @@ const router = express.Router();
 const {buscarPorId, buscarUserComentario, modificarUser, hacerComentario, respuestaComentario, buscarPorNombre, img} = require ('../controllers/user');
 const { requiereLogeo, isAuth } = require ('../controllers/auth');
 
-router.get('/perfil/buscar/:userId', requiereLogeo, isAuth, (req,res ) => {
+// router.get('/perfil/buscar/:userId', requiereLogeo, isAuth, (req,res ) => {
     
-    res.json({
-        user: req.profile,
+//     res.json({
+//         user: req.profile,
        
-    });
-})
+//     });
+// })
 router.put('/perfil/modificar/:userId', requiereLogeo, isAuth, modificarUser)
 router.put('/perfil/comentario/:userId/:userIdComentando', requiereLogeo, isAuth, hacerComentario);
 router.put('/perfil/comentario/respuesta/:userId/:userIdComentando', requiereLogeo, isAuth, respuestaComentario);
-router.get('/perfil/buscar', requiereLogeo, isAuth, buscarPorNombre)
+router.get('/perfil/buscar', buscarPorNombre)
 router.get('/perfil/imagen/:userId', img)
 
 //Cada vez que se utilice el parametro userId en la ruta, se ejecutara busacar por id.

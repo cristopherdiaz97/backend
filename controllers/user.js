@@ -167,7 +167,7 @@ exports.modificarUser = (req, res) => {
 exports.buscarPorNombre = (req, res) => {
     
     User.find({userName: {$regex: req.body.user, $options: '$i'}})
-    .select('userName img -_id')
+    .select('userName _id')
     .exec((err, users) => {
         if(err || !users){
             res.status(400).json({
