@@ -278,6 +278,7 @@ exports.listadoOfertas = (req, res) => {
                 error: 'Ha ocurrido un error'
               }); 
         }
+        
         if(data.length === 0){
             res.json({error: 'Aún no tienes ofertas'})
         }else{

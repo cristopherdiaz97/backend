@@ -15,10 +15,6 @@ const publicacionSchema = new Schema ({
         trim: true,
         
     },
-    likes: {
-        type: Number,
-        default: 0
-    },
     img: {
         data: Buffer,
         contentType: String,
@@ -59,11 +55,12 @@ const publicacionSchema = new Schema ({
         ref: "Users",
         required: false
     },
-    likes: {
-        type: Number,
-        default: 0,
-        
-    }
+    likes: [
+        {
+            type: ObjectId,
+            ref: "Users"
+        }
+    ]
 
 
 

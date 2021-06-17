@@ -165,21 +165,23 @@ exports.modificarUser = (req, res) => {
     
 }
 
-exports.buscarPorNombre = (req, res) => {
+
     
-    User.find({userName: {$regex: req.body.user, $options: '$i'}})
-    .select('userName _id')
-    .exec((err, users) => {
-        if(err || !users){
-            res.status(400).json({
-                error: 'Usuario no encontrado'
-            })
-        }
-        res.json(
-            {users}
-        )
-    }) 
-}
+    exports.buscarPorNombre = (req, res) => {
+        
+        User.find({userName: {$regex: req.body.user, $options: '$i'}})
+        .select('userName _id')
+        .exec((err, users) => {
+            if(err || !users){
+                res.status(400).json({
+                    error: 'Usuario no encontrado'
+                })
+            }
+            res.json(
+                {users}
+            )
+        }) 
+    }
 
 exports.img = (req, res, next) => {
     if(req.profile.img.contentType == null){
@@ -193,4 +195,28 @@ exports.img = (req, res, next) => {
     }
     
     next()
+}
+
+exports.likePerfil = async (req, res) => {
+    
+    try{
+        const user = await User.findById(req.body.idUser)
+    if( !user.likes.includes(req.profile._id)){
+        await user.updateOne({$push: {likes: req.profile._id}})
+        res.json({
+            mensaje: 'Like +1 <3'
+        })
+    } else {
+        await user.updateOne({$pull: {likes: req.profile._id}})
+        res.json({
+            mensaje: 'Like -1 </3'
+        })
+    }
+
+    }catch (err){
+        res.status(500).json({
+            error: 'Ha ocurrido un error innesperado'
+        })
+    }
+   
 }

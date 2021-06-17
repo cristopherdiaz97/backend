@@ -230,24 +230,30 @@ exports.listaPublicaciones = (req, res) => {
     })
 };
 
-exports.likePublicacion = (req, res) => {
-    const publicacion = req.publicacion
-    if(publicacion){
-    publicacion.likes = publicacion.likes + 1 
-    publicacion.save((err, result) => {
-        
-        if(err){
-            return res.status(400).json({
-                error: 'Ha ocurrido un error'
-            });
-        }
-            
-        res.json({likes: req.publicacion.likes});
-           
-    })
-    }else{
-        res.json({error: 'Oops! no pudiste dar like!' })
+exports.likePublicacion = async (req, res) => {
+    console.log(req.body.idPublicacion, 'publicacion', req.profile._id, 'iduser');
+
+    try{
+        const publicacion = await Publicaciones.findById(req.body.idPublicacion)
+    if( !publicacion.likes.includes(req.profile._id)){
+        await publicacion.updateOne({$push: {likes: req.profile._id}})
+        res.json({
+            mensaje: 'Like +1 <3'
+        })
+    } else {
+        await publicacion.updateOne({$pull: {likes: req.profile._id}})
+        res.json({
+            mensaje: 'Like -1 </3'
+        })
     }
+
+    }catch (err){
+        res.status(500).json({
+            error: 'Ha ocurrido un error innesperado'
+        })
+    }
+    
+    
 }
 
 exports.listaPublicacionesUsuarios = (req, res) => {

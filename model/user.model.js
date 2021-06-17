@@ -87,10 +87,12 @@ const userSchema = new Schema ({
         ref: "Reservas",
         required: false
     },
-    likes: {
-        type: Number,
-        default: 0
-    }
+    likes: [
+        {
+            type: ObjectId,
+            ref: "Users"
+        }
+    ]
 
 
 

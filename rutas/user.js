@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {buscarPorId, buscarUserComentario, modificarUser, hacerComentario, respuestaComentario, buscarPorNombre, img} = require ('../controllers/user');
+const {buscarPorId, buscarUserComentario, modificarUser, hacerComentario, respuestaComentario, buscarPorNombre, img, likePerfil} = require ('../controllers/user');
 const { requiereLogeo, isAuth } = require ('../controllers/auth');
 
 router.get('/perfil/buscar/:userId', (req, res) => {
@@ -12,8 +12,9 @@ router.get('/perfil/buscar/:userId', (req, res) => {
 router.put('/perfil/modificar/:userId', requiereLogeo, isAuth, modificarUser)
 router.put('/perfil/comentario/:userId/:userIdComentando', requiereLogeo, isAuth, hacerComentario);
 router.put('/perfil/comentario/respuesta/:userId/:userIdComentando', requiereLogeo, isAuth, respuestaComentario);
-router.post('/perfil/buscar/', buscarPorNombre)
+router.post('/perfil/buscar', buscarPorNombre)
 router.get('/perfil/imagen/:userId', img)
+router.put('/perfil/like/:userId', requiereLogeo, isAuth, likePerfil)
 
 //Cada vez que se utilice el parametro userId en la ruta, se ejecutara busacar por id.
 router.param('userId', buscarPorId); 

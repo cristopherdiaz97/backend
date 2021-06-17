@@ -16,8 +16,8 @@ router.post('/publicacion/crear/:userId', requiereLogeo, isAuth, create);
 router.get('/inicio/', listaPublicaciones);
 router.put('/publicacion/comentario/:publicacionId/:userId', requiereLogeo, isAuth, hacerComentario);
 router.put('/publicacion/comentario/respuesta/:publicacionId/:userId', requiereLogeo, isAuth, respuestaComentario);
-router.post('/publicacion/likes/:publicacionId/:userId', requiereLogeo, isAuth, likePublicacion)
 router.get('/publicacion/misPublicaciones/:userId', requiereLogeo, isAuth, listaPublicacionesUsuarios);
+router.put('/publicacion/like/:userId', likePublicacion)
 router.get('/publicacion/imagen/:publicacionId', img)
 
 router.param('userId', buscarPorId);
