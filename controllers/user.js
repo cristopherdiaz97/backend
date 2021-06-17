@@ -9,6 +9,7 @@ exports.buscarPorId = (req, res, next, id) =>{
     User.findById(id)
     .populate('region', 'nombre')
     .populate('comentarios', 'usuario')
+    .populate('likes', 'userName')
     .exec((err, user) => {
 
         if(err || !user) {
@@ -112,30 +113,18 @@ exports.modificarUser = (req, res) => {
     form.keepExtensions = true;
     
     form.parse(req, (err, fields, files) => {
-
-
         if(err){
             return res.status(400).json({
                 error: 'No se pudo cargar imagen'
             })
         }
-        
+    
         let user = req.profile
         user = _.extend(user, fields)
         // 1kb = 1000b
         // 1mb = 1000000b
 
         const {userName,nombre, apellido, email, edad, password} = fields
-        if(!userName || !nombre || !apellido || !email || !edad || !password){
-            return res.status(400).json({
-                error: 'Debe rellenar todos los campos Obligatorios!'
-            })
-        }
-        if(password.length < 6 ) {
-            return res.status(400).json({
-                error: 'Contraseña debe tener al menos 6 carácteres!'
-            })
-        }
 
         if(files.img){
             //Tamaño mayor a 1mb 
@@ -149,7 +138,17 @@ exports.modificarUser = (req, res) => {
             user.img.contentType = files.img.type;
             
         }
-        user.password = bcrypt.hashSync(fields.password);
+
+        if(password){
+            if(password.length < 6 ) {
+                return res.status(400).json({
+                error: 'Contraseña debe tener al menos 6 carácteres!'
+            })
+            }else{
+                user.password = bcrypt.hashSync(fields.password);
+            }
+        }
+
         user.save((err, result) => {
         
             if(err){

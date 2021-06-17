@@ -10,7 +10,7 @@ exports.create = (req, res, next ) => {
     
     form.parse(req, (err, fields, files) => {
 
-
+        
         if(err){
             return res.status(400).json({
                 error: 'No se pudo cargar imagen'
@@ -111,34 +111,7 @@ exports.modificar = (req, res) => {
         
         let publicacion = req.publicacion
         publicacion = _.extend(publicacion, fields)
-        // 1kb = 1000b
-        // 1mb = 1000000b
 
-        // const {nombre, descripcion} = fields
-        // if(!nombre || !descripcion){
-        //     return res.status(400).json({
-        //         error: 'Debe rellenar todos los campos Obligatorios!'
-        //     })
-        // }
-
-        // if(files.img.type == null){
-        //     return res.json({
-        //         error: 'Tú publicación debe contener una imagen'
-        //     })
-        // }
-
-        if(files.img){
-            //Tamaño mayor a 1mb 
-            if(files.img.size > 1000000 ){
-                return res.status(400).json({
-                    error: 'Debe seleccionar una imagen que no supere 1mb de tamaño'
-                })
-            }
-
-            publicacion.img.data = fs.readFileSync(files.img.path);
-            publicacion.img.contentType = files.img.type;
-             
-        }
         
         publicacion.save((err, result) => {
         
@@ -219,6 +192,7 @@ exports.listaPublicaciones = (req, res) => {
     .populate('comentarios', 'comentario')
     .populate('creador', 'userName')
     .populate('estiloTatuaje', 'nombre')
+    .populate('likes', 'userName')
     .populate('etiquetado', 'userName')
     .exec((err, data) => {
         if(err) {
@@ -231,7 +205,6 @@ exports.listaPublicaciones = (req, res) => {
 };
 
 exports.likePublicacion = async (req, res) => {
-    console.log(req.body.idPublicacion, 'publicacion', req.profile._id, 'iduser');
 
     try{
         const publicacion = await Publicaciones.findById(req.body.idPublicacion)
