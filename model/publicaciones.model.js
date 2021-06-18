@@ -63,7 +63,6 @@ const publicacionSchema = new Schema ({
     ]
 
 
-
 }, {
     timestamps: true
 });

@@ -203,12 +203,12 @@ exports.likePerfil = async (req, res) => {
     if( !user.likes.includes(req.profile._id)){
         await user.updateOne({$push: {likes: req.profile._id}})
         res.json({
-            mensaje: 'Like +1 <3'
+            mensaje: 'like'
         })
     } else {
         await user.updateOne({$pull: {likes: req.profile._id}})
         res.json({
-            mensaje: 'Like -1 </3'
+            mensaje: 'dislike'
         })
     }
 

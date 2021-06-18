@@ -66,6 +66,7 @@ exports.publicacionPorId = (req, res, next, id) => {
     .populate('creador', 'userName')
     .populate('estiloTatuaje', 'nombre')
     .populate('etiquetado', 'userName')
+    .populate('likes', 'userName')
     .exec((err, publicacion) => {
         if(err || !publicacion) {
             return res.status(400).json({
@@ -211,12 +212,12 @@ exports.likePublicacion = async (req, res) => {
     if( !publicacion.likes.includes(req.profile._id)){
         await publicacion.updateOne({$push: {likes: req.profile._id}})
         res.json({
-            mensaje: 'Like +1 <3'
+            mensaje: 'like'
         })
     } else {
         await publicacion.updateOne({$pull: {likes: req.profile._id}})
         res.json({
-            mensaje: 'Like -1 </3'
+            mensaje: 'dislike'
         })
     }
 
