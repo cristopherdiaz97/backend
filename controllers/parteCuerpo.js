@@ -1,28 +1,28 @@
-const Region = require ('../model/region.model');
+const Parte = require ('../model/parteCuerpo.model');
 
 
-exports.regionPorId = (req, res, next, id) => {
-    Region.findById(id).exec((err, region) => {
-        if(err || !region) {
+exports.partePorId = (req, res, next, id) => {
+    Parte.findById(id).exec((err, parte) => {
+        if(err || !parte) {
             return res.status(400).json({
-                error: 'Region no encontrada!'
+                error: 'Parte del cuerpo no encontrada!'
               }); 
         }
-        req.region = region;
+        req.parte = parte;
         next();
     })
 };
 
 exports.buscar = (req, res) => {
-    return res.json(req.region);
+    return res.json(req.parte);
 }
 
 exports.create = (req, res, next) => {
     
 
-    const region = new Region(req.body);
+    const parte = new Parte(req.body);
     
-    const {nombre} = region
+    const {nombre} = parte
     
     if(!nombre) {
         return res.status(400).json({
@@ -30,7 +30,7 @@ exports.create = (req, res, next) => {
         }); 
     }
 
-    region.save((error,data) =>{
+    parte.save((error,data) =>{
 
         if(error){
             return res.status(400).json ({error: 'Ha ocurrido un error!'})
@@ -42,14 +42,14 @@ exports.create = (req, res, next) => {
 };
 
 exports.eliminar = (req, res) => {
-    let region = req.region
+    let parte = req.parte
 
-    region.remove((err, regionEliminada)=>{
+    parte.remove((err, parteEliminada)=>{
         if(err){
             return res.status(400).json({error: 'Ha ocurrido un error'});
         }
         res.json({
-            mensaje: `Region ${regionEliminada.nombre} eliminada con exito!`
+            mensaje: `${parteEliminada.nombre} eliminada con exito!`
         })
     }
     );
@@ -57,10 +57,10 @@ exports.eliminar = (req, res) => {
 
 exports.modificar = (req, res) => {
     
-    const region = req.region;
-    region.nombre = req.body.nombre;
+    const parte = req.parte;
+    parte.nombre = req.body.nombre;
 
-    region.save((error,data) =>{
+    parte.save((error,data) =>{
 
         if(error){
             return res.status(400).json ({error: 'Ha ocurrido un error'})
@@ -71,11 +71,11 @@ exports.modificar = (req, res) => {
 
 };
 
-exports.listaRegiones = (req, res) => {
-    Region.find().exec((err, data) => {
+exports.listaPartes= (req, res) => {
+    Parte.find().exec((err, data) => {
         if(err) {
             return res.status(400).json({
-                error: 'No existen regiones aún!'
+                error: 'No existen partes del cuerpo aún!'
               }); 
         }
         res.json({data})

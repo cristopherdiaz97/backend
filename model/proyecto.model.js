@@ -9,6 +9,11 @@ const proyectoSchema = new Schema ({
         trim: true
         
     },
+    descripcion: {
+        type: String,
+        required: true,
+        trim: true
+    },
     tamaño: {
         type:String,
         required: true,
@@ -16,9 +21,9 @@ const proyectoSchema = new Schema ({
         
     },
     parteCuerpo: {
-        type: String,
-        required: true,
-        trim: true
+        type: ObjectId,
+        ref: "Parte",
+        required: false
     },
     img: {
         data: Buffer,

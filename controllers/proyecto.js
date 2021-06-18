@@ -30,10 +30,10 @@ exports.create = (req, res, next ) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        const {nombre, tamaño, parteCuerpo, estiloTatuaje} = fields
+        const {nombre, tamaño, parteCuerpo, estiloTatuaje, descripcion} = fields
         
                 
-        if(!nombre || !tamaño || !parteCuerpo || !estiloTatuaje){
+        if(!nombre || !tamaño || !parteCuerpo || !estiloTatuaje || !descripcion){
             return res.status(400).json({
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
@@ -87,6 +87,7 @@ exports.proyectoPorId = (req, res, next, id) => {
     Proyecto.findById(id)
     .populate('estado', 'nombre')
     .populate('creador', 'nombre')
+    .populate('parteCuerpo', 'nombre')
     .populate('estiloTatuaje', 'nombre')
     .populate({path:'oferta', model: 'Oferta'})
     .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
@@ -110,6 +111,7 @@ exports.listaProyectos = (req, res) => {
     Proyecto.find()
     .populate('estado', 'nombre')
     .populate('creador', 'nombre')
+    .populate('parteCuerpo', 'nombre')
     .populate('estiloTatuaje', 'nombre')
     .populate({path:'oferta', model: 'Oferta'})
     .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
@@ -142,18 +144,6 @@ exports.modificar = (req, res) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        // const {nombre, tamaño, parteCuerpo, estiloTatuaje} = fields
-        // if(!nombre || !tamaño || !parteCuerpo || !estiloTatuaje){
-        //     return res.status(400).json({
-        //         error: 'Debe rellenar todos los campos Obligatorios!'
-        //     })
-        // }
-
-        // if(files.img.type == null){
-        //     return res.json({
-        //         error: 'Tú publicación debe contener una imagen'
-        //     })
-        // }
 
         if(files.img){
             //Tamaño mayor a 1mb 
@@ -205,6 +195,7 @@ exports.listaProyectosUsuarios = (req, res) => {
     Proyecto.find({creador: user._id})
     .populate('estado', 'nombre')
     .populate('creador', 'nombre')
+    .populate('parteCuerpo', 'nombre')
     .populate('estiloTatuaje', 'nombre')
     .populate({path:'oferta', model: 'Oferta'})
     .populate({path: 'oferta', populate: { path: 'estado'}})
