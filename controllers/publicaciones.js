@@ -195,6 +195,9 @@ exports.listaPublicaciones = (req, res) => {
     .populate('estiloTatuaje', 'nombre')
     .populate('likes', 'userName')
     .populate('etiquetado', 'userName')
+    .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
+    .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
+    
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({
