@@ -151,8 +151,8 @@ exports.respuestaComentario = (req, res) => {
         })
         .populate('comentarios._id')
         .exec( (err, result) => {
-            if(err){
-                return res.status(400).json({error : err})
+            if(err || !result){
+                return res.status(400).json({error : 'Ha ocurrido un error'})
             }else{
                 res.json({
                     mensaje: 'Comentario agregado!',
@@ -161,6 +161,33 @@ exports.respuestaComentario = (req, res) => {
             }
         }) 
     
+}
+
+exports.eliminarRespuesta = (req, res) => {
+    const publicacion = req.publicacion
+    if(publicacion.creador._id.equals(req.profile._id) || req.profile._id.equals(req.body.idUser)){
+        
+        Publicaciones.updateOne(
+            { '_id': publicacion._id, 'comentarios._id': req.body.idComentario },
+            {
+                $pull: { 
+                    "comentarios.$.respuesta": {_id: req.body.idRespuesta}
+            }
+            })
+            .exec( (err, result) => {
+                if(err){
+                    return res.status(400).json({error : 'Ha ocurrido un error'})
+                }else{
+                    res.json({
+                        mensaje: 'Respuesta eliminada con exito'
+                    })
+                }
+            }) 
+    } else {
+        return res.status(400).json({
+            error: 'No tienes permisos para hacer esto!'
+        })
+    }
 }
 
 exports.hacerComentario = (req, res) => {
@@ -193,33 +220,36 @@ exports.hacerComentario = (req, res) => {
 exports.eliminarComentario = (req, res) => {
     
     const publicacion = req.publicacion
-    if(publicacion.creador === req.profile._id || req.profile._id === publicacion.comentarios.usuario._id){
-
-    }
     
-    Publicaciones.updateOne({ _id: publicacion._id}, 
-    {
-        $push: { 
-        comentarios: {comentario: req.body.comentario, usuario: req.profile._id}
-    }
-    }
-    ).populate('comentarios._id')
-    .exec( (err, result) => {
-        if(err){
-            return res.status(400).json({error : err})
-        }else{
-            res.json({
-                mensaje: 'Comentario agregado con exito!',
+    if(publicacion.creador._id.equals(req.profile._id) || req.profile._id.equals(req.body.idUser)){
+
+        Publicaciones.updateOne(
+            { '_id': publicacion._id},
+            {
+                $pull: { 
+                    comentarios: {_id : req.body.idComentario},
+            }
+            })
+            .exec( (err, result) => {
+                if(err || !result){
+                    return res.status(400).json({error : 'Ha ocurrido un error'})
+                }else{
+                    res.json({
+                        mensaje: 'Comentario eliminado con exito!',
+                        
+                    })
+                }
+            }) 
+        } else {
+            return res.status(400).json({
+                error: 'No tienes permisos para hacer esto'
             })
         }
-    })  
-    
 }
 
 
 exports.listaPublicaciones = (req, res) => {
     Publicaciones.find()
-    .populate('comentarios', 'comentario')
     .populate('creador', 'userName')
     .populate('estiloTatuaje', 'nombre')
     .populate('likes', 'userName')

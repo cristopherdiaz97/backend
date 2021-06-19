@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {create, publicacionPorId, buscar, eliminar, modificar, 
     listaPublicaciones, hacerComentario, respuestaComentario, likePublicacion,
-    listaPublicacionesUsuarios, img
+    listaPublicacionesUsuarios, img, eliminarComentario, eliminarRespuesta
     } = require ('../controllers/publicaciones');
 const {buscarPorId} = require ('../controllers/user');
 const { requiereLogeo, isAuth, isAuthPublicaciones } = require ('../controllers/auth');
@@ -15,7 +15,9 @@ router.put('/publicacion/modificar/:publicacionId/:userId', requiereLogeo, isAut
 router.post('/publicacion/crear/:userId', requiereLogeo, isAuth, create);
 router.get('/inicio/', listaPublicaciones);
 router.put('/publicacion/comentario/:publicacionId/:userId', requiereLogeo, isAuth, hacerComentario);
+router.put('/publicacion/comentario/eliminar/:publicacionId/:userId', requiereLogeo, isAuth, eliminarComentario);
 router.put('/publicacion/comentario/respuesta/:publicacionId/:userId', requiereLogeo, isAuth, respuestaComentario);
+router.put('/publicacion/comentario/respuesta/eliminar/:publicacionId/:userId', requiereLogeo, isAuth, eliminarRespuesta);
 router.get('/publicacion/misPublicaciones/:userId', requiereLogeo, isAuth, listaPublicacionesUsuarios);
 router.put('/publicacion/like/:userId', requiereLogeo, isAuth, likePublicacion)
 router.get('/publicacion/imagen/:publicacionId', img)
