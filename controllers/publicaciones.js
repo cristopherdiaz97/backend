@@ -65,8 +65,10 @@ exports.publicacionPorId = (req, res, next, id) => {
     .populate('comentarios', 'comentario')
     .populate('creador', 'userName')
     .populate('estiloTatuaje', 'nombre')
-    .populate('etiquetado', 'userName')
     .populate('likes', 'userName')
+    .populate('etiquetado', 'userName')
+    .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
+    .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
     .exec((err, publicacion) => {
         if(err || !publicacion) {
             return res.status(400).json({
@@ -188,6 +190,33 @@ exports.hacerComentario = (req, res) => {
     
 }
 
+exports.eliminarComentario = (req, res) => {
+    
+    const publicacion = req.publicacion
+    if(publicacion.creador === req.profile._id || req.profile._id === publicacion.comentarios.usuario._id){
+
+    }
+    
+    Publicaciones.updateOne({ _id: publicacion._id}, 
+    {
+        $push: { 
+        comentarios: {comentario: req.body.comentario, usuario: req.profile._id}
+    }
+    }
+    ).populate('comentarios._id')
+    .exec( (err, result) => {
+        if(err){
+            return res.status(400).json({error : err})
+        }else{
+            res.json({
+                mensaje: 'Comentario agregado con exito!',
+            })
+        }
+    })  
+    
+}
+
+
 exports.listaPublicaciones = (req, res) => {
     Publicaciones.find()
     .populate('comentarios', 'comentario')
@@ -237,9 +266,13 @@ exports.listaPublicacionesUsuarios = (req, res) => {
     const user = req.profile
 
     Publicaciones.find({creador: user._id})
-    .populate('estiloTatuaje', 'nombre')
-    .populate('etiquetado', 'userName')
+    .populate('comentarios', 'comentario')
     .populate('creador', 'userName')
+    .populate('estiloTatuaje', 'nombre')
+    .populate('likes', 'userName')
+    .populate('etiquetado', 'userName')
+    .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
+    .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({
