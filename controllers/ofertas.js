@@ -280,7 +280,7 @@ exports.listadoOfertas = (req, res) => {
         }
         
         if(data.length === 0){
-            res.json({error: 'Aún no tienes ofertas'})
+            res.json({error: 'Aún no haz realizado ninguna oferta'})
         }else{
         res.json({data})}
     })

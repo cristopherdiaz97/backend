@@ -10,6 +10,8 @@ exports.buscarPorId = (req, res, next, id) =>{
     .populate('region', 'nombre')
     .populate('comentarios', 'usuario')
     .populate('likes', 'userName')
+    .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
+    .populate( {path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
     .exec((err, user) => {
 
         if(err || !user) {
