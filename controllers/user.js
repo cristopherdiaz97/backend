@@ -44,16 +44,16 @@ exports.buscarUserComentario = (req, res, next, id) =>{
 exports.hacerComentario = (req, res) => {
     
     const usuario = req.profile
-    const usuario2 = req.profile2
+    const usuarioComentado = req.profile2
     if(!req.body.comentario ){
         return res.json({
             error: 'Debes ingresar texto en tus comentarios'
         })
     }
-    User.updateOne({ _id: usuario._id}, 
+    User.updateOne({ _id: usuarioComentado._id}, 
     {
         $push: { 
-        comentarios: {comentario: req.body.comentario, usuario: usuario2._id}
+        comentarios: {comentario: req.body.comentario, usuario: usuario._id}
     }
     }
     ).populate('comentarios._id')
@@ -62,17 +62,48 @@ exports.hacerComentario = (req, res) => {
             return res.status(400).json({error : 'Ha ocurrido un error'})
         }else{
             res.json({
-                mensaje: `Comentario agregado a ${usuario.userName}!`,
+                mensaje: `Comentario agregado a ${usuarioComentado.userName}!`,
                 
             })
         }
     })  
     
 }
+exports.eliminarComentario = (req, res) => {
+    const usuario = req.profile
+    const usuarioComentado = req.profile2
+    
+    // duño del perfil                              ||         dueño del comentario
+    if(usuario._id.equals(usuarioComentado._id) || usuario._id.equals(req.body.idUser)){
+
+        User.updateOne(
+            { '_id': usuarioComentado._id},
+            {
+                $pull: { 
+                    comentarios: {_id : req.body.idComentario},
+            }
+            })
+            .exec( (err, result) => {
+                if(err || !result){
+                    return res.status(400).json({error : 'Ha ocurrido un error'})
+                }else{
+                    res.json({
+                        mensaje: 'Comentario eliminado con exito!',
+                        
+                    })
+                }
+            }) 
+        } else {
+            return res.status(400).json({
+                error: 'No tienes permisos para hacer esto'
+            })
+        }
+
+}
 
 exports.respuestaComentario = (req, res) => {
     const usuario = req.profile
-    const usuarioComenta = req.profile2
+    const usuarioComentado = req.profile2
     //REVISAR SI LOS CAMPOS INCLUYEN DATOS
     if(!req.body.respuesta || !req.body.id){
         return res.json({
@@ -83,14 +114,14 @@ exports.respuestaComentario = (req, res) => {
     //SE RECIBEN DESDE LOS PARAMETROS LA ID DEL USUARIO EN EL QUE ESTA EL COMENTARIO Y SE INGRESA LA RESPUESTA
     //AL COMENTARIO EN CUESTIÓN
     User.updateOne(
-        { '_id': usuario._id, 'comentarios._id': req.body.id },
+        { '_id': usuarioComentado._id, 'comentarios._id': req.body.id },
         {
             //INGRESA LA RESPUESTA AL COMENTARIO AL QUE SE LE ESTA RESPONDIENDO !!
             $push: { 
                 'comentarios.$.respuesta': 
                 {
                     respuesta: req.body.respuesta, 
-                    usuario: usuarioComenta._id
+                    usuario: usuario._id
                 }
         }
         })
@@ -100,7 +131,7 @@ exports.respuestaComentario = (req, res) => {
                 return res.status(400).json({error : err})
             }else{
                 res.json({
-                    mensaje: `Comentario agregado con exito a ${usuario.userName}`,
+                    mensaje: `Comentario agregado con exito a ${usuarioComentado.userName}`,
                     
                 })
             }
@@ -108,6 +139,33 @@ exports.respuestaComentario = (req, res) => {
     
 }
 
+exports.eliminarRespuesta = (req, res) => {
+    const usuario = req.profile
+    const usuarioComentado = req.profile2
+    if(usuarioComentado._id.equals(usuario._id) || usuario._id.equals(req.body.idUser)){
+        
+        User.updateOne(
+            { '_id': usuarioComentado._id, 'comentarios._id': req.body.idComentario },
+            {
+                $pull: { 
+                    "comentarios.$.respuesta": {_id: req.body.idRespuesta}
+            }
+            })
+            .exec( (err, result) => {
+                if(err){
+                    return res.status(400).json({error : 'Ha ocurrido un error'})
+                }else{
+                    res.json({
+                        mensaje: 'Respuesta eliminada con exito'
+                    })
+                }
+            }) 
+    } else {
+        return res.status(400).json({
+            error: 'No tienes permisos para hacer esto!'
+        })
+    }
+}
 exports.modificarUser = (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
