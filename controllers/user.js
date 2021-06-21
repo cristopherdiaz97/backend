@@ -184,7 +184,7 @@ exports.modificarUser = (req, res) => {
         // 1kb = 1000b
         // 1mb = 1000000b
 
-        const {userName,nombre, apellido, email, edad, password} = fields
+        const {password, email} = fields
 
         if(files.img){
             //Tamaño mayor a 1mb 
@@ -197,6 +197,10 @@ exports.modificarUser = (req, res) => {
             user.img.data = fs.readFileSync(files.img.path);
             user.img.contentType = files.img.type;
             
+        }
+        if(email){
+            const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@gmail.cl|@hotmail.cl|@inacapmail.cl|@outlook.com|@outlook.cl|@icloud.com/
+            if(!emailRegex.test(email)) return res.json({error: 'Debe ingresar un email valido'})
         }
 
         if(password){
@@ -216,8 +220,16 @@ exports.modificarUser = (req, res) => {
                     error: 'Ha ocurrido un error'
                 });
             }
-            
-            res.json({result});
+            const dataUser = { 
+                id: result._id,
+                user: result.userName,
+                tipo: result.tipo,
+                nombre : result.nombre,
+                email : result.email,
+                membresia: result.membresia,
+                img: result.img
+            };
+            res.json({dataUser});
                
         })
     });

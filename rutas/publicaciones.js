@@ -18,7 +18,7 @@ router.put('/publicacion/comentario/:publicacionId/:userId', requiereLogeo, isAu
 router.put('/publicacion/comentario/eliminar/:publicacionId/:userId', requiereLogeo, isAuth, eliminarComentario);
 router.put('/publicacion/comentario/respuesta/:publicacionId/:userId', requiereLogeo, isAuth, respuestaComentario);
 router.put('/publicacion/comentario/respuesta/eliminar/:publicacionId/:userId', requiereLogeo, isAuth, eliminarRespuesta);
-router.get('/publicacion/misPublicaciones/:userId', requiereLogeo, isAuth, listaPublicacionesUsuarios);
+router.get('/publicacion/misPublicaciones/:userId', requiereLogeo, listaPublicacionesUsuarios);
 router.put('/publicacion/like/:userId', requiereLogeo, isAuth, likePublicacion)
 router.get('/publicacion/imagen/:publicacionId', img)
 
