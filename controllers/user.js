@@ -239,6 +239,11 @@ exports.modificarUser = (req, res) => {
 
     
     exports.buscarPorNombre = (req, res) => {
+        if(!req.body.user || req.body.user == '') {
+            return res.status(400).json({
+                error: 'Debe ingresar al menos un cáracter'
+            })
+        }
         
         User.find({userName: {$regex: req.body.user, $options: '$i'}})
         .select('userName _id')

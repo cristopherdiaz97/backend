@@ -38,11 +38,6 @@ exports.create = (req, res, next ) => {
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
         }
-        if(files.img.type == null){
-            return res.json({
-                error: 'Tú proyecto debe contener una imagen'
-            })
-        }
 
         if(files.img){
             //Tamaño mayor a 1mb 
@@ -54,6 +49,10 @@ exports.create = (req, res, next ) => {
 
             proyecto.img.data = fs.readFileSync(files.img.path);
             proyecto.img.contentType = files.img.type;
+        } else {
+            return res.status(400).json({
+                error: 'Tu proyecto debe contener imagen'
+            })
         }
         proyecto.creador = req.profile._id
         Estado.findOne({nombre: 'En espera'})
@@ -74,7 +73,7 @@ exports.create = (req, res, next ) => {
             
             
             res.json({
-                proyecto
+                mensaje: `El proyecto ${result.nombre} ha sido creado con exito!`
             });
                
         })

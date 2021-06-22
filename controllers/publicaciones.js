@@ -41,6 +41,10 @@ exports.create = (req, res, next ) => {
 
             publicacion.img.data = fs.readFileSync(files.img.path);
             publicacion.img.contentType = files.img.type;
+        } else {
+            return res.status(400).json({
+                error: 'Tu publicación debe contener imagen'
+            })
         }
 
         publicacion.creador = req.profile._id
