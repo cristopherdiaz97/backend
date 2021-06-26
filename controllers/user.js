@@ -25,6 +25,23 @@ exports.buscarPorId = (req, res, next, id) =>{
     
 };
 
+exports.buscarReservador = (req, res, next, id) =>{
+    
+    User.findById(id)
+    .select('_id')
+    .exec((err, reservador) => {
+
+        if(err || !reservador) {
+            return res.status(400).json({
+                error: 'Usuario no encontrado'
+            })
+        }
+        req.reservador = reservador;
+        next();
+    })
+    
+};
+
 exports.buscarUserComentario = (req, res, next, id) =>{
     
     User.findById(id)
@@ -235,8 +252,6 @@ exports.modificarUser = (req, res) => {
     });
     
 }
-
-
     
     exports.buscarPorNombre = (req, res) => {
         if(!req.body.user || req.body.user == '') {
@@ -294,5 +309,21 @@ exports.likePerfil = async (req, res) => {
             error: 'Ha ocurrido un error innesperado'
         })
     }
-   
+}
+
+exports.listadoUsuarios = (req, res) => {
+
+    User.find()
+    .select('nombre userName apellido tipo img')
+    .exec((err, result) => {
+        if(err || !result){
+            return res.status(400).json({
+                error: 'Usuarios no encontrados'
+            })
+        }
+
+        return res.json({
+            result
+        })
+    })
 }

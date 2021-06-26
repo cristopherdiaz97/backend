@@ -23,6 +23,8 @@ const proyectoRoutes = require ('./rutas/proyecto');
 const ofertaRoutes = require ('./rutas/ofertas');
 const chatroomRoutes = require ('./rutas/chatroom.js')
 const parteCuerpoRoutes = require ('./rutas/parteCuerpo.js')
+const reservaRoutes = require ('./rutas/reserva')
+const ofertaReservaRoutes = require ('./rutas/ofertaReserva')
     //Iniciar base de datos
     DB();
 
@@ -44,6 +46,9 @@ const parteCuerpoRoutes = require ('./rutas/parteCuerpo.js')
     app.use('/api', ofertaRoutes);
     app.use('/api', chatroomRoutes)
     app.use('/api', parteCuerpoRoutes)
+    app.use('/api', reservaRoutes)
+    app.use('/api', ofertaReservaRoutes)
+    
     app.use('/api',  (err, res) => {
         res.json({mensaje: 'Página principal Inkapp!'});
     })

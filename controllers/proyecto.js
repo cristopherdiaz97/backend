@@ -11,11 +11,9 @@ exports.create = (req, res, next ) => {
      
     if(req.profile.membresia == false) {
         return res.json({
-            error: 'Lo sentimos, debes adquirir una membresía para utilizar esta opción'
+            error: 'Lo sentimos, debes adquirir una membresía para utilizar esta funcionalidad'
         })
     }
-
-
     form.parse(req, (err, fields, files) => {
 
         
@@ -109,7 +107,7 @@ exports.buscar = (req, res) => {
 exports.listaProyectos = (req, res) => {
     Proyecto.find()
     .populate('estado', 'nombre')
-    .populate('creador', 'nombre')
+    .populate('creador', 'userName')
     .populate('parteCuerpo', 'nombre')
     .populate('estiloTatuaje', 'nombre')
     .populate({path:'oferta', model: 'Oferta'})
@@ -193,7 +191,7 @@ exports.listaProyectosUsuarios = (req, res) => {
 
     Proyecto.find({creador: user._id})
     .populate('estado', 'nombre')
-    .populate('creador', 'nombre')
+    .populate('creador', 'userName')
     .populate('parteCuerpo', 'nombre')
     .populate('estiloTatuaje', 'nombre')
     .populate({path:'oferta', model: 'Oferta'})

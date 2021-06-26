@@ -116,7 +116,6 @@ exports.eliminar = (req, res) => {
     oferta = req.oferta
     user = req.profile
     if(user._id.equals(oferta.ofertante._id) || user.tipo == 0){
-        
         oferta.remove((err, ofertaEliminada)=>{
             if(err){
                 return res.status(400).json({error: 'Ha ocurrido un error'});
@@ -129,8 +128,6 @@ exports.eliminar = (req, res) => {
     }else {
         return res.status(400).json ({error : 'No tienes permisos para realizar esta acción'})
     }
-
-    
 }
 
 exports.modificar = (req, res) => {
