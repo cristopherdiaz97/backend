@@ -11,8 +11,8 @@ exports.create = (req, res, next ) => {
         if(req.profile.tipo === 1){
         const reserva = new Reserva({
             creador: req.profile._id,
-            fecha: req.body.fecha,
-            fechaFin: req.body.fechaFin
+            fecha: moment(req.body.fecha).format('MMMM Do YYYY hh:mm a'),
+            fechaFin: moment(req.body.fechaFin).format('MMMM Do YYYY hh:mm a')
         })
         
         Estado.findOne({nombre: 'En espera'})
@@ -96,8 +96,8 @@ exports.listaReservas = (req, res) => {
 exports.modificar = (req, res) => {
         let reserva = req.reserva
         if(req.body.fecha){
-            reserva.fecha = req.body.fecha
-            reserva.fechaFin = req.body.fechaFin
+            reserva.fecha = moment(req.body.fecha).format('MMMM Do YYYY hh:mm a')
+            reserva.fechaFin = moment(req.body.fechaFin).format('MMMM Do YYYY hh:mm a')
         }
 
         reserva.save((err, result) => {
