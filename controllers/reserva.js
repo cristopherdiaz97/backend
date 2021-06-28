@@ -3,16 +3,12 @@ const Estado = require ('../model/estado.model')
 const moment = require ('moment')
 const User = require('../model/user.model')
 exports.create = (req, res, next ) => {
-        if(req.profile.limitReserve > 5 ){
-            return res.status(400).json({
-                error: 'Has superado tu límite de reservaciones'
-            })
-        }
+        
         if(req.profile.tipo === 1){
         const reserva = new Reserva({
             creador: req.profile._id,
-            fecha: moment(req.body.fecha).format('MMMM Do YYYY hh:mm a'),
-            fechaFin: moment(req.body.fechaFin).format('MMMM Do YYYY hh:mm a')
+            fecha: req.body.fecha,
+            fechaFin: req.body.fechaFin
         })
         
         Estado.findOne({nombre: 'En espera'})
@@ -29,15 +25,6 @@ exports.create = (req, res, next ) => {
                         error: 'Ha ocurrido un error inesperado'
                     });
                 }
-                User.findByIdAndUpdate(req.profile._id, 
-                   {limitReserve : req.profile.limitReserve +1}
-                ).exec((err, result) => {
-                    if(err){
-                        return res.status(400).json({
-                            error:'Ha ocurrido un error innesperado'
-                        })
-                    }
-                })
                          
                 res.json({
                     mensaje: "Has agendado una nueva hora"
@@ -96,8 +83,8 @@ exports.listaReservas = (req, res) => {
 exports.modificar = (req, res) => {
         let reserva = req.reserva
         if(req.body.fecha){
-            reserva.fecha = moment(req.body.fecha).format('MMMM Do YYYY hh:mm a')
-            reserva.fechaFin = moment(req.body.fechaFin).format('MMMM Do YYYY hh:mm a')
+            reserva.fecha = req.body.fecha
+            reserva.fechaFin = req.body.fechaFin
         }
 
         reserva.save((err, result) => {
@@ -118,20 +105,11 @@ exports.modificar = (req, res) => {
 exports.eliminar = (req, res) => {
     let reserva = req.reserva
     
-    
     reserva.remove((err, horaEliminada)=>{
         if(err){
             return res.status(400).json({error: 'Ha ocurrido un error'});
         }
-        User.findByIdAndUpdate(req.profile._id, 
-            {limitReserve : req.profile.limitReserve -1}
-         ).exec((err, result) => {
-             if(err){
-                 return res.status(400).json({
-                     error:'Ha ocurrido un error innesperado'
-                 })
-             }
-         })
+        
         res.json({
             mensaje: `Tu hora agendada ha sido eliminada con éxito`
         })
@@ -165,6 +143,7 @@ exports.miAgenda = (req, res) => {
     if(req.profile.tipo === 1){
         Reserva.find({ creador: req.profile._id})
         .populate('estado', 'nombre')
+        .select('-__v -createdAt -updatedAt')
         .exec((err, data) => {
             if(err) {
                 return res.status(400).json({

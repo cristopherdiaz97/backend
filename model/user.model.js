@@ -92,11 +92,7 @@ const userSchema = new Schema ({
             type: ObjectId,
             ref: "Users"
         }
-    ],
-    limitReserve:{
-        type:Number,
-        default: 0
-    }
+    ]
 
 
 
