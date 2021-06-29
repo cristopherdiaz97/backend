@@ -64,10 +64,10 @@ exports.create = (req, res, next ) => {
 exports.publicacionPorId = (req, res, next, id) => {
     Publicaciones.findById(id)
     .populate('comentarios', 'comentario')
-    .populate('creador', 'userName')
+    .populate('creador', 'userName img')
     .populate('estiloTatuaje', 'nombre')
     .populate('likes', 'userName')
-    .populate('etiquetado', 'userName')
+    .populate('etiquetado', 'userName img')
     .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
     .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
     .exec((err, publicacion) => {
@@ -251,10 +251,10 @@ exports.eliminarComentario = (req, res) => {
 
 exports.listaPublicaciones = (req, res) => {
     Publicaciones.find()
-    .populate('creador', 'userName')
+    .populate('creador', 'userName img')
     .populate('estiloTatuaje', 'nombre')
     .populate('likes', 'userName')
-    .populate('etiquetado', 'userName')
+    .populate('etiquetado', 'userName img')
     .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
     .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
     

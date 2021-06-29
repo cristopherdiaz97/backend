@@ -26,6 +26,11 @@ exports.createUser = (req, res, next ) => {
         // 1mb = 1000000b
 
         const {userName, nombre, apellido, email, edad, password} = fields
+        if(edad < 18 || edad >100) {
+            return res.status(400).json({
+                error: 'Debes se mayor de edad'
+            })
+        }
         const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@gmail.cl|@hotmail.cl|@inacapmail.cl|@outlook.com|@outlook.cl|@icloud.com/
         if(!emailRegex.test(email)) return res.json({error: 'Debe ingresar un email valido'})
         

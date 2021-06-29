@@ -1,6 +1,4 @@
 const mongoose = require ('mongoose');
-// require("dotenv").config();
-// const dbUrl = process.env.CONNDB;
 const dbUrl = "mongodb+srv://admin:admin123@inkapp.nfyae.mongodb.net/inkapp?retryWrites=true&w=majority"
 
 module.exports = () => {
