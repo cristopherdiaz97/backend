@@ -8,7 +8,7 @@ const { requiereLogeo, isAuth, isAuthProyecto } = require ('../controllers/auth'
 //RUTAS ESTADOS
 router.post('/proyecto/crear/:userId', requiereLogeo, isAuth, create);
 router.put('/proyecto/modificar/:proyectoId/:userId', requiereLogeo, isAuth, isAuthProyecto, modificar);
-router.get('/proyecto/buscar/:proyectoId/:userId', requiereLogeo, isAuth, isAuthProyecto, buscar);
+router.get('/proyecto/buscar/:proyectoId/:userId', requiereLogeo, isAuth, buscar);
 router.delete('/proyecto/eliminar/:proyectoId/:userId', requiereLogeo, isAuth, isAuthProyecto, eliminar);
 router.get('/proyecto/listado/:userId', requiereLogeo, isAuth, listaProyectos);
 router.get('/proyecto/misProyectos/:userId', requiereLogeo, listaProyectosUsuarios);

@@ -83,7 +83,7 @@ exports.create = (req, res, next ) => {
 exports.proyectoPorId = (req, res, next, id) => {
     Proyecto.findById(id)
     .populate('estado', 'nombre')
-    .populate('creador', 'nombre')
+    .populate('creador', 'userName')
     .populate('parteCuerpo', 'nombre')
     .populate('estiloTatuaje', 'nombre')
     .populate({path:'oferta', model: 'Oferta'})
@@ -118,6 +118,11 @@ exports.listaProyectos = (req, res) => {
             return res.status(400).json({
                 error: 'No existen estados aún!'
               }); 
+        }
+        if(data.length === 0){
+            return res.status(400).json({
+                error: 'Se el primero en crear un proyecto en Inkapp'
+            })
         }
         res.json({data})
     })

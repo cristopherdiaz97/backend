@@ -3,7 +3,6 @@ const { errorHandler } = require ('../helpers/dbErrorHandler');
 const _ = require( 'lodash');
 const formidable = require ('formidable');
 const fs = require ('fs');
-const User = require ('../model/user.model')
 exports.create = (req, res, next ) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -27,7 +26,11 @@ exports.create = (req, res, next ) => {
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
         }
-        
+        console.log(etiquetado);
+        if(etiquetado){
+            publicacion.etiquetado = etiquetado
+        }
+
         if(files.img){
             //Tamaño mayor a 1mb 
             if(files.img.size > 1000000){
@@ -263,6 +266,11 @@ exports.listaPublicaciones = (req, res) => {
             return res.status(400).json({
                 error: 'No existen publicaciones aún!'
               }); 
+        }
+        if(data.length === 0) {
+            return res.status(400).json({
+                error: 'Se el primero en publicar algo'
+            })
         }
         res.json({data})
     })

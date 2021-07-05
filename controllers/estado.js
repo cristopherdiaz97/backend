@@ -77,6 +77,11 @@ exports.listaEstados = (req, res) => {
                 error: 'No existen estados aún!'
               }); 
         }
+        if(data.length === 0) {
+            return res.status(400).json({
+                error: 'Aún no existen estados'
+            })
+        }
         res.json({data})
     })
 };

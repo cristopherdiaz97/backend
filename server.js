@@ -25,16 +25,17 @@ const chatroomRoutes = require ('./rutas/chatroom.js')
 const parteCuerpoRoutes = require ('./rutas/parteCuerpo.js')
 const reservaRoutes = require ('./rutas/reserva')
 const ofertaReservaRoutes = require ('./rutas/ofertaReserva')
+const mercadoPagoRoutes = require('./rutas/mercadoPago')
     //Iniciar base de datos
     DB();
 
     //middleware 
     app.use(morgan('dev'));
-    app.use(cors());
+    app.use(cors({
+        origin: '*'}));
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
     app.use(cookieParser());
-
     //RUTAS
     app.use('/api', userRoutes);
     app.use('/api', authRoutes);
@@ -48,10 +49,11 @@ const ofertaReservaRoutes = require ('./rutas/ofertaReserva')
     app.use('/api', parteCuerpoRoutes)
     app.use('/api', reservaRoutes)
     app.use('/api', ofertaReservaRoutes)
-    
+    app.use('/api', mercadoPagoRoutes)
     app.use('/api',  (err, res) => {
         res.json({mensaje: 'Página principal Inkapp!'});
     })
+    
 
     // RESCATAR PUERTO PARA SERVIDOR 
     const port =  process.env.PORT || 4000
@@ -109,8 +111,7 @@ const ofertaReservaRoutes = require ('./rutas/ofertaReserva')
         })
     
         socket.on('chatroomMessage', async ({chatroomId, message}) => {
-            console.log(chatroomId, message)
-            console.log(socket.userId)
+            
             if(message.trim().length > 0){
                 const user = await User.findOne({_id: socket.userId})
                 

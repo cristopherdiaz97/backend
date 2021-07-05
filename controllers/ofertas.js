@@ -7,8 +7,11 @@ const Proyecto = require ('../model/proyecto.model');
 exports.create = (req, res, next) => {
     const proyecto = req.proyecto
     const perfil = req.profile
-    
-    const oferta = new Oferta(req.body)
+    const oferta = new Oferta({
+        descripcion: req.body.descripcion,
+        valor: req.body.valor
+    })
+    console.log(oferta);
     const {descripcion, valor} = oferta
     oferta.ofertante = perfil._id
     if(proyecto.estado.nombre === 'Terminado') {
@@ -22,6 +25,9 @@ exports.create = (req, res, next) => {
           error: 'Debe ingresar todos los campos obligatorios!'
         }); 
     }
+    
+    const regex = /^\$?(?!0.00)(([0-9]{1,3}.([0-9]{3}.)*)[0-9]{3}|[0-9]{1,3})(\,[0-9]{2})?$/
+    if(!regex.test(valor)) return res.status(400).json({error: 'Debe ingresar un valor valido'})
 
     if(!proyecto, !perfil){
         return res.status(400).json({
@@ -138,6 +144,8 @@ exports.modificar = (req, res) => {
     if(!req.body.descripcion || !req.body.valor) {
         return res.status(400).json ({error: 'Debe rellenar todos los campos obligatorios!'})
     }
+    const regex = /(?=.*\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|0)?(\.\d{1,2})?$/
+    if(!regex.test(req.body.valor)) return res.status(400).json({error: 'Debe ingresar un valor valido'})
 
     if(user._id.equals(oferta.ofertante._id) || user.tipo == 0){
         oferta.descripcion = req.body.descripcion

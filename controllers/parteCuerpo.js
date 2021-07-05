@@ -78,6 +78,11 @@ exports.listaPartes= (req, res) => {
                 error: 'No existen partes del cuerpo aún!'
               }); 
         }
+        if(data.length === 0) {
+            return res.status(400).json({
+                error: 'Aún no existen partes del cuerpo'
+            })
+        }
         res.json({data})
     })
 };

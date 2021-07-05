@@ -327,3 +327,19 @@ exports.listadoUsuarios = (req, res) => {
         })
     })
 }
+
+exports.hacerVip = (req, res) => {
+
+    User.findByIdAndUpdate(req.profile._id,{
+        membresia: true
+        }).exec((err, result) => {
+        if(err || !result){
+            return res.status(400).json({
+                error: 'Error en servidor'
+            })
+        }
+        return res.status(200).json({
+            mensaje: 'Ahora eres un usuario vip, vuelve a iniciar sesión.'
+        })
+    })
+}

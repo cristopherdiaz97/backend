@@ -78,6 +78,11 @@ exports.listaTipoTatuajes = (req, res) => {
                 error: 'No existen tipos de tatuajes aún!'
               }); 
         }
+        if(data.length === 0) {
+            return res.status(400).json({
+                error: 'Aún no existen estilos de tatuajes'
+            })
+        }
         res.json({data})
     })
 };

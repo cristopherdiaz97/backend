@@ -78,6 +78,11 @@ exports.listaRegiones = (req, res) => {
                 error: 'No existen regiones aún!'
               }); 
         }
+        if(data.length === 0) {
+            return res.status(400).json({
+                error: 'Aún no existen regiones'
+            })
+        }
         res.json({data})
     })
 };

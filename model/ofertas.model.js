@@ -15,7 +15,7 @@ const ofertaSchema = new Schema ({
         
     },
     valor: {
-        type: Number,
+        type: String,
         required: true,
         trim: true
     },
