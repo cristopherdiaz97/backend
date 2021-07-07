@@ -105,27 +105,62 @@ exports.buscar = (req, res) => {
 }
 
 exports.listaProyectos = (req, res) => {
-    Proyecto.find()
-    .populate('estado', 'nombre')
-    .populate('creador', 'userName')
-    .populate('parteCuerpo', 'nombre')
-    .populate('estiloTatuaje', 'nombre')
-    .populate({path:'oferta', model: 'Oferta'})
-    .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
-    .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
-    .exec((err, data) => {
-        if(err) {
-            return res.status(400).json({
-                error: 'No existen estados aún!'
-              }); 
-        }
-        if(data.length === 0){
-            return res.status(400).json({
-                error: 'Se el primero en crear un proyecto en Inkapp'
-            })
-        }
-        res.json({data})
-    })
+    
+    let order = req.query.order ? req.query.order : 'desc'
+    let sortBy = req.query.sortBy ? req.query.sortBy : 'createdAt'
+    let limit = req.query.limit ? parseInt(req.query.limit) : 100
+    let filter = req.query.filter ? req.query.filter : null
+    if(filter != null) {
+        Proyecto.find({estiloTatuaje: filter})
+        .select('-img')
+        .populate('estado', 'nombre')
+        .populate('creador', 'userName')
+        .populate('parteCuerpo', 'nombre')
+        .populate('estiloTatuaje', 'nombre')
+        .populate({path:'oferta', model: 'Oferta'})
+        .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
+        .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
+        .sort([[sortBy, order]])
+        .limit(limit)
+        .exec((err, data) => {
+            if(err) {
+                return res.status(400).json({
+                    error: 'No existen estados aún!'
+                }); 
+            }
+            if(data.length === 0){
+                return res.status(400).json({
+                    error: 'Se el primero en crear un proyecto en Inkapp'
+                })
+            }
+            res.json({data})
+        })
+    } else {
+        Proyecto.find()
+        .select('-img')
+        .populate('estado', 'nombre')
+        .populate('creador', 'userName')
+        .populate('parteCuerpo', 'nombre')
+        .populate('estiloTatuaje', 'nombre')
+        .populate({path:'oferta', model: 'Oferta'})
+        .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
+        .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
+        .sort([[sortBy, order]])
+        .limit(limit)
+        .exec((err, data) => {
+            if(err) {
+                return res.status(400).json({
+                    error: 'No existen estados aún!'
+                }); 
+            }
+            if(data.length === 0){
+                return res.status(400).json({
+                    error: 'Se el primero en crear un proyecto en Inkapp'
+                })
+            }
+            res.json({data})
+        })
+    }
 };
 
 exports.modificar = (req, res) => {

@@ -14,8 +14,6 @@ router.get('/proyecto/listado/:userId', requiereLogeo, isAuth, listaProyectos);
 router.get('/proyecto/misProyectos/:userId', requiereLogeo, listaProyectosUsuarios);
 router.get('/proyecto/imagen/:proyectoId', img)
 
-
 router.param('userId', buscarPorId);
 router.param('proyectoId', proyectoPorId);
-
 module.exports = router;    

@@ -253,27 +253,62 @@ exports.eliminarComentario = (req, res) => {
 
 
 exports.listaPublicaciones = (req, res) => {
-    Publicaciones.find()
-    .populate('creador', 'userName img')
-    .populate('estiloTatuaje', 'nombre')
-    .populate('likes', 'userName')
-    .populate('etiquetado', 'userName img')
-    .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
-    .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
+    let order = req.query.order ? req.query.order : 'desc'
+    let sortBy = req.query.sortBy ? req.query.sortBy : 'createdAt'
+    let limit = req.query.limit ? parseInt(req.query.limit) : 100
+    let filter = req.query.filter ? req.query.filter : null
     
-    .exec((err, data) => {
-        if(err) {
-            return res.status(400).json({
-                error: 'No existen publicaciones aún!'
-              }); 
-        }
-        if(data.length === 0) {
-            return res.status(400).json({
-                error: 'Se el primero en publicar algo'
-            })
-        }
-        res.json({data})
-    })
+    if(filter != null) {
+        Publicaciones.find({estiloTatuaje: filter})
+        .select('-img')
+        .populate('creador', 'userName img')
+        .populate('estiloTatuaje', 'nombre')
+        .populate('likes', 'userName')
+        .populate('etiquetado', 'userName img')
+        .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
+        .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
+        .sort([[sortBy, order]])
+        .limit(limit)
+        .exec((err, data) => {
+            if(err) {
+                return res.status(400).json({
+                    error: 'No existen publicaciones aún!'
+                }); 
+            }
+            if(data.length === 0) {
+                return res.status(400).json({
+                    error: 'Se el primero en publicar algo'
+                })
+            }
+            res.json({data})
+        })
+    } else {
+        Publicaciones.find()
+        .select('-img')
+        .populate('creador', 'userName img')
+        .populate('estiloTatuaje', 'nombre')
+        .populate('likes', 'userName')
+        .populate('etiquetado', 'userName img')
+        .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
+        .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
+        .sort([[sortBy, order]])
+        .limit(limit)
+        .exec((err, data) => {
+            if(err) {
+                return res.status(400).json({
+                    error: 'No existen publicaciones aún!'
+                }); 
+            }
+            if(data.length === 0) {
+                return res.status(400).json({
+                    error: 'Se el primero en publicar algo'
+                })
+            }
+            res.json({data})
+        })
+    }
+    
+    
 };
 
 exports.likePublicacion = async (req, res) => {
@@ -297,13 +332,10 @@ exports.likePublicacion = async (req, res) => {
             error: 'Ha ocurrido un error innesperado'
         })
     }
-    
-    
 }
 
 exports.listaPublicacionesUsuarios = (req, res) => {
     const user = req.profile
-
     Publicaciones.find({creador: user._id})
     .populate('comentarios', 'comentario')
     .populate('creador', 'userName')
