@@ -109,60 +109,69 @@ exports.listaProyectos = (req, res) => {
     let order = req.query.order ? req.query.order : 'desc'
     let sortBy = req.query.sortBy ? req.query.sortBy : 'createdAt'
     let limit = req.query.limit ? parseInt(req.query.limit) : 100
-    let filter = req.query.filter ? req.query.filter : null
-    if(filter != null) {
-        Proyecto.find({estiloTatuaje: filter})
-        .select('-img')
-        .populate('estado', 'nombre')
-        .populate('creador', 'userName')
-        .populate('parteCuerpo', 'nombre')
-        .populate('estiloTatuaje', 'nombre')
-        .populate({path:'oferta', model: 'Oferta'})
-        .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
-        .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
-        .sort([[sortBy, order]])
-        .limit(limit)
-        .exec((err, data) => {
-            if(err) {
-                return res.status(400).json({
-                    error: 'No existen estados aún!'
-                }); 
-            }
-            if(data.length === 0){
-                return res.status(400).json({
-                    error: 'Se el primero en crear un proyecto en Inkapp'
-                })
-            }
-            res.json({data})
-        })
-    } else {
-        Proyecto.find()
-        .select('-img')
-        .populate('estado', 'nombre')
-        .populate('creador', 'userName')
-        .populate('parteCuerpo', 'nombre')
-        .populate('estiloTatuaje', 'nombre')
-        .populate({path:'oferta', model: 'Oferta'})
-        .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
-        .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
-        .sort([[sortBy, order]])
-        .limit(limit)
-        .exec((err, data) => {
-            if(err) {
-                return res.status(400).json({
-                    error: 'No existen estados aún!'
-                }); 
-            }
-            if(data.length === 0){
-                return res.status(400).json({
-                    error: 'Se el primero en crear un proyecto en Inkapp'
-                })
-            }
-            res.json({data})
-        })
-    }
+    Proyecto.find()
+    .select('-img')
+    .populate('estado', 'nombre')
+    .populate('creador', 'userName')
+    .populate('parteCuerpo', 'nombre')
+    .populate('estiloTatuaje', 'nombre')
+    .populate({path:'oferta', model: 'Oferta'})
+    .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
+    .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
+    .sort([[sortBy, order]])
+    .limit(limit)
+    .exec((err, data) => {
+        if(err) {
+            return res.status(400).json({
+                error: 'No existen estados aún!'
+            }); 
+        }
+        if(data.length === 0){
+            return res.status(400).json({
+                error: 'Se el primero en crear un proyecto en Inkapp'
+            })
+        }
+        res.json({data})
+    })
 };
 
+exports.listaProyectosBusqueda = (req, res) => {
+    let order = req.body.order ? req.body.order : "desc";
+    let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
+    let limit = req.body.limit ? parseInt(req.body.limit) : 100;
+    let skip = parseInt(req.body.skip);
+    let findArgs = {};
+
+    for (let key in req.body.filters) {
+        if (req.body.filters[key].length > 0) {
+                findArgs[key] = req.body.filters[key];
+        }
+    }
+    
+    Proyectos.find(findArgs)
+        .select('-img')
+        .populate('estado', 'nombre')
+        .populate('creador', 'userName')
+        .populate('parteCuerpo', 'nombre')
+        .populate('estiloTatuaje', 'nombre')
+        .populate({path:'oferta', model: 'Oferta'})
+        .populate({path: 'oferta', populate: { path: 'estado', select: 'nombre'}})
+        .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
+        .skip(skip)
+        .sort([[sortBy, order]])
+        .limit(limit)
+        .exec((err, data) => {
+            if (err) {
+                return res.status(400).json({
+                    error: "Publicacion no encontrada"
+                });
+            }
+            res.json({
+                size: data.length,
+                data
+            });
+        });
+};
 exports.modificar = (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
