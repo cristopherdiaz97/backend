@@ -137,7 +137,7 @@ exports.listaProyectos = (req, res) => {
 
 exports.listaProyectosBusqueda = (req, res) => {
     let order = req.body.order ? req.body.order : "desc";
-    let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
+    let sortBy = req.body.sortBy ? req.body.sortBy : "createdAt";
     let limit = req.body.limit ? parseInt(req.body.limit) : 100;
     let skip = parseInt(req.body.skip);
     let findArgs = {};
@@ -237,7 +237,8 @@ exports.eliminar = (req, res) => {
 
 exports.listaProyectosUsuarios = (req, res) => {
     const user = req.profile
-
+    let order = req.body.order ? req.body.order : "desc";
+    let sortBy = req.body.sortBy ? req.body.sortBy : "createdAt"
     Proyecto.find({creador: user._id})
     .populate('estado', 'nombre')
     .populate('creador', 'userName')
@@ -246,6 +247,7 @@ exports.listaProyectosUsuarios = (req, res) => {
     .populate({path:'oferta', model: 'Oferta'})
     .populate({path: 'oferta', populate: { path: 'estado'}})
     .populate({path: 'oferta', populate: { path: 'ofertante', select: 'userName'}})
+    .sort([[sortBy, order]])
     .exec((err, data) => {
         if(err) {
             return res.status(400).json({
