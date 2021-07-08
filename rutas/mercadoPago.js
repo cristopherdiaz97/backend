@@ -23,7 +23,7 @@ const mercadopago = require ('mercadopago');
             "payment_methods": {
               "excluded_payment_types": [
                   {
-                      "id": "ticket"
+                    "id": "ticket"
                   },
                   {
                     "id": "bank_transfer"
@@ -35,7 +35,7 @@ const mercadopago = require ('mercadopago');
           .then(function(response){
             return res.json(response.body.init_point)
           }).catch(function(error){
-            console.log(error);
+            return error
           });
         });
 module.exports = router;

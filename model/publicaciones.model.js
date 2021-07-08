@@ -50,11 +50,6 @@ const publicacionSchema = new Schema ({
         ref: "estilosTatuajes",
         required: false
     },
-    etiquetado:{
-        type: ObjectId,
-        ref: "Users",
-        required: false
-    },
     likes: [
         {
             type: ObjectId,

@@ -148,7 +148,7 @@ exports.listaProyectosBusqueda = (req, res) => {
         }
     }
     
-    Proyectos.find(findArgs)
+    Proyecto.find(findArgs)
         .select('-img')
         .populate('estado', 'nombre')
         .populate('creador', 'userName')
@@ -163,7 +163,7 @@ exports.listaProyectosBusqueda = (req, res) => {
         .exec((err, data) => {
             if (err) {
                 return res.status(400).json({
-                    error: "Publicacion no encontrada"
+                    error: "Proyecto no encontrado"
                 });
             }
             res.json({

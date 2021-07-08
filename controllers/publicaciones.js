@@ -20,15 +20,11 @@ exports.create = (req, res, next ) => {
 
         // 1kb = 1000b
         // 1mb = 1000000b
-        const {nombre, descripcion, estiloTatuaje, etiquetado} = fields
+        const {nombre, descripcion, estiloTatuaje} = fields
         if(!nombre || !descripcion || !estiloTatuaje){
             return res.status(400).json({
                 error: 'Debe rellenar todos los campos Obligatorios!'
             })
-        }
-        console.log(etiquetado);
-        if(etiquetado){
-            publicacion.etiquetado = etiquetado
         }
 
         if(files.img){
@@ -70,7 +66,6 @@ exports.publicacionPorId = (req, res, next, id) => {
     .populate('creador', 'userName img')
     .populate('estiloTatuaje', 'nombre')
     .populate('likes', 'userName')
-    .populate('etiquetado', 'userName img')
     .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
     .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
     .exec((err, publicacion) => {
@@ -260,7 +255,6 @@ exports.listaPublicaciones = (req, res) => {
         .populate('creador', 'userName img')
         .populate('estiloTatuaje', 'nombre')
         .populate('likes', 'userName')
-        .populate('etiquetado', 'userName img')
         .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
         .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
         .sort([[sortBy, order]])
@@ -298,7 +292,6 @@ exports.listaPublicacionesBusqueda = (req, res) => {
         .populate('creador', 'userName img')
         .populate('estiloTatuaje', 'nombre')
         .populate('likes', 'userName')
-        .populate('etiquetado', 'userName img')
         .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
         .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
         .skip(skip)
@@ -347,7 +340,6 @@ exports.listaPublicacionesUsuarios = (req, res) => {
     .populate('creador', 'userName')
     .populate('estiloTatuaje', 'nombre')
     .populate('likes', 'userName')
-    .populate('etiquetado', 'userName')
     .populate( {path: 'comentarios', populate: {path: 'usuario', select: 'userName'}})
     .populate({path: 'comentarios', populate: { path: 'usuario', select: 'userName'}, populate: {path:'respuesta', populate: {path: 'usuario', select: 'userName'}}})
     .exec((err, data) => {
